@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activity-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: activity-be
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: activity-be
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: bovine-be
+          image: cemaregistry.azurecr.io/cema/activity-be:$VERSION
+          ports:
+            - containerPort: 30026
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: $ENV
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activity-be
+spec:
+  type: NodePort
+  ports:
+    - port: 30026
+      nodePort: 30026
+  selector:
+    app: activity-be
