@@ -1,4 +1,4 @@
-package com.cema.activity.domain;
+package com.cema.activity.domain.search;
 
 import lombok.Builder;
 import lombok.Getter;

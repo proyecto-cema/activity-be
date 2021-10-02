@@ -4,7 +4,7 @@ public interface ActivityMapper<DOM, ENT> {
 
     DOM mapEntityToDomain(ENT cemaActivity);
 
-    ENT updateEntityWithDomain(DOM activity);
+    ENT mapDomainToEntity(DOM activity);
 
     ENT updateEntityWithDomain(DOM activity, ENT cemaActivity);
 }

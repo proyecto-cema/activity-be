@@ -52,7 +52,7 @@ class InoculationRegisterHandlerTest {
 
         CemaInoculation cemaInoculation = new CemaInoculation();
         cemaInoculation.setId(uuid);
-        when(inoculationMapper.updateEntityWithDomain(activity)).thenReturn(cemaInoculation);
+        when(inoculationMapper.mapDomainToEntity(activity)).thenReturn(cemaInoculation);
 
         Inoculation result = inoculationRegisterHandler.handle(activity);
 

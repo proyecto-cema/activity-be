@@ -1,7 +1,7 @@
 package com.cema.activity.config.filters;
 
-import com.cema.activity.domain.CemaUserDetails;
-import com.cema.activity.domain.User;
+import com.cema.activity.domain.security.CemaUserDetails;
+import com.cema.activity.domain.security.User;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

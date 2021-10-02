@@ -1,7 +1,8 @@
 package com.cema.activity.controllers.helpers;
 
 import com.cema.activity.domain.Activity;
-import com.cema.activity.domain.SearchResponse;
+import com.cema.activity.domain.search.SearchResponse;
+import org.springframework.http.HttpHeaders;
 
 public interface ActivityHelper {
 
@@ -14,4 +15,6 @@ public interface ActivityHelper {
     Activity get(String uuid, String type, String cuig);
 
     SearchResponse search(Activity activity, int page, int size);
+
+    HttpHeaders buildHeaders(SearchResponse searchResponse);
 }

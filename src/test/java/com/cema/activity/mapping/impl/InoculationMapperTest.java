@@ -86,7 +86,7 @@ class InoculationMapperTest {
                 .product(product)
                 .build();
 
-        CemaInoculation result = inoculationMapper.updateEntityWithDomain(inoculation);
+        CemaInoculation result = inoculationMapper.mapDomainToEntity(inoculation);
 
         assertThat(result.getId(), is(id));
         assertThat(result.getEstablishmentCuig(), is(cuig));

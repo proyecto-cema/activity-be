@@ -1,7 +1,7 @@
 package com.cema.activity.services.authorization.impl;
 
 import com.cema.activity.constants.Roles;
-import com.cema.activity.domain.CemaUserDetails;
+import com.cema.activity.domain.security.CemaUserDetails;
 import com.cema.activity.services.authorization.AuthorizationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -15,10 +16,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Inoculation extends Activity {
 
     @ApiModelProperty(notes = "The dose inoculated", example = "5000")
-    @NotNull(message = "Dose is required")
     private Long dose;
     @ApiModelProperty(notes = "The brand of the drug used", example = "MERCK")
     private String brand;
@@ -33,7 +34,11 @@ public class Inoculation extends Activity {
     private String batchName;
 
     @Builder
-    public Inoculation(UUID id, @NotEmpty(message = "Name is required") String name, @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)inoculation|feeding") String type, String description, Date executionDate, @NotEmpty(message = "Cuig is required") String establishmentCuig, Long dose, String brand, String drug, String product, String bovineTag, String batchName) {
+    public Inoculation(UUID id, @NotEmpty(message = "Name is required") String name,
+                       @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)inoculation|feeding") String type,
+                       String description, Date executionDate,
+                       @NotEmpty(message = "Cuig is required") String establishmentCuig, Long dose, String brand,
+                       String drug, String product, String bovineTag, String batchName) {
         super(id, name, type, description, executionDate, establishmentCuig);
         this.dose = dose;
         this.brand = brand;
