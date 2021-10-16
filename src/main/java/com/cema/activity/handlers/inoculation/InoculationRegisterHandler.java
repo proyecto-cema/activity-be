@@ -11,8 +11,6 @@ import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +42,7 @@ public class InoculationRegisterHandler implements ActivityHandler<Inoculation, 
         if (StringUtils.isEmpty(activity.getBatchName()) == StringUtils.isEmpty(activity.getBovineTag())) {
             throw new ValidationException(Messages.MISSING_OR_INCORRECT_FIELDS);
         }
-        CemaInoculation cemaInoculation = inoculationMapper.updateEntityWithDomain(activity);
+        CemaInoculation cemaInoculation = inoculationMapper.mapDomainToEntity(activity);
 
         inoculationRepository.save(cemaInoculation);
 

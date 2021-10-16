@@ -1,6 +1,5 @@
 package com.cema.activity.mapping.impl;
 
-import com.cema.activity.constants.Activities;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.mapping.ActivityMapper;
@@ -12,6 +11,8 @@ import java.util.Date;
 @Service
 public class InoculationMapper implements ActivityMapper<Inoculation, CemaInoculation> {
 
+    private static final String TYPE = "Inoculation";
+
     @Override
     public Inoculation mapEntityToDomain(CemaInoculation cemaActivity) {
         return Inoculation.builder()
@@ -22,7 +23,7 @@ public class InoculationMapper implements ActivityMapper<Inoculation, CemaInocul
                 .bovineTag(cemaActivity.getBovineTag())
                 .batchName(cemaActivity.getBatchName())
                 .establishmentCuig(cemaActivity.getEstablishmentCuig())
-                .type(Activities.INOCULATION)
+                .type(TYPE)
                 .dose(cemaActivity.getDose())
                 .brand(cemaActivity.getBrand())
                 .drug(cemaActivity.getDrug())
@@ -31,7 +32,7 @@ public class InoculationMapper implements ActivityMapper<Inoculation, CemaInocul
     }
 
     @Override
-    public CemaInoculation updateEntityWithDomain(Inoculation activity) {
+    public CemaInoculation mapDomainToEntity(Inoculation activity) {
         CemaInoculation cemaInoculation = new CemaInoculation();
 
         cemaInoculation.setId(activity.getId());

@@ -1,9 +1,12 @@
 package com.cema.activity.services.database.impl;
 
 import com.cema.activity.domain.Inoculation;
+import com.cema.activity.domain.Weighing;
 import com.cema.activity.entities.CemaInoculation;
+import com.cema.activity.entities.CemaWeighing;
 import com.cema.activity.mapping.ActivityMapper;
 import com.cema.activity.repositories.InoculationRepository;
+import com.cema.activity.repositories.WeighingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -33,21 +36,28 @@ class DatabaseServiceImplTest {
     @Mock
     private ActivityMapper<Inoculation, CemaInoculation> inoculationMapper;
 
+    @Mock
+    private WeighingRepository weighingRepository;
+
+    @Mock
+    private ActivityMapper<Weighing, CemaWeighing> weighingMapper;
+
     private DatabaseServiceImpl databaseService;
 
     @BeforeEach
     public void startUp() {
         openMocks(this);
-        databaseService = new DatabaseServiceImpl(inoculationRepository, inoculationMapper);
+        databaseService = new DatabaseServiceImpl(inoculationRepository, weighingRepository,
+                weighingMapper, inoculationMapper);
     }
 
     @Test
-    public void searchInoculationsShouldReturnInoculationsFromTheDatabase(){
+    public void searchInoculationsShouldReturnInoculationsFromTheDatabase() {
         CemaInoculation cemaInoculation = new CemaInoculation();
         Inoculation inoculation = Inoculation.builder().build();
         int page = 0;
         int size = 3;
-        when(inoculationMapper.updateEntityWithDomain(inoculation)).thenReturn(cemaInoculation);
+        when(inoculationMapper.mapDomainToEntity(inoculation)).thenReturn(cemaInoculation);
         Page<CemaInoculation> mockPage = Mockito.mock(Page.class);
         when(inoculationRepository.findAll(exampleArgumentCaptor.capture(), pageableArgumentCaptor.capture())).thenReturn(mockPage);
 
@@ -64,6 +74,31 @@ class DatabaseServiceImplTest {
         CemaInoculation search = (CemaInoculation) resultExample.getProbe();
 
         assertThat(search, is(cemaInoculation));
+    }
+
+    @Test
+    public void searchWeightingsShouldReturnInoculationsFromTheDatabase() {
+        CemaWeighing cemaWeighing = new CemaWeighing();
+        Weighing weighing = Weighing.builder().build();
+        int page = 0;
+        int size = 3;
+        when(weighingMapper.mapDomainToEntity(weighing)).thenReturn(cemaWeighing);
+        Page<CemaWeighing> mockPage = Mockito.mock(Page.class);
+        when(weighingRepository.findAll(exampleArgumentCaptor.capture(), pageableArgumentCaptor.capture())).thenReturn(mockPage);
+
+        Page<CemaWeighing> result = databaseService.searchWeightings(weighing, page, size);
+
+        assertThat(result, is(mockPage));
+
+        Example resultExample = exampleArgumentCaptor.getValue();
+        Pageable resultPageable = pageableArgumentCaptor.getValue();
+
+        assertThat(resultPageable.getPageSize(), is(size));
+        assertThat(resultPageable.getOffset(), is(0L));
+
+        CemaWeighing search = (CemaWeighing) resultExample.getProbe();
+
+        assertThat(search, is(cemaWeighing));
     }
 
 }

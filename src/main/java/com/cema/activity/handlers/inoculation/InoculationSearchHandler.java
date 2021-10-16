@@ -1,16 +1,14 @@
 package com.cema.activity.handlers.inoculation;
 
 import com.cema.activity.domain.Inoculation;
-import com.cema.activity.domain.SearchRequest;
-import com.cema.activity.domain.SearchResponse;
+import com.cema.activity.domain.search.SearchRequest;
+import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.handlers.ActivityHandler;
 import com.cema.activity.mapping.ActivityMapper;
 import com.cema.activity.services.authorization.AuthorizationService;
 import com.cema.activity.services.database.DatabaseService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

@@ -2,8 +2,8 @@ package com.cema.activity.controllers.helpers.impl;
 
 import com.cema.activity.constants.HandlerNames;
 import com.cema.activity.domain.Activity;
-import com.cema.activity.domain.SearchRequest;
-import com.cema.activity.domain.SearchResponse;
+import com.cema.activity.domain.search.SearchRequest;
+import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.handlers.ActivityHandler;
 import com.cema.activity.handlers.HandlerFactory;
 import org.junit.jupiter.api.BeforeEach;

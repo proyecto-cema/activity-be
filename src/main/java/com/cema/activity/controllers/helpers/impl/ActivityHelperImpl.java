@@ -1,15 +1,15 @@
 package com.cema.activity.controllers.helpers.impl;
 
 import com.cema.activity.constants.HandlerNames;
+import com.cema.activity.constants.Headers;
 import com.cema.activity.controllers.helpers.ActivityHelper;
 import com.cema.activity.domain.Activity;
-import com.cema.activity.domain.SearchRequest;
-import com.cema.activity.domain.SearchResponse;
+import com.cema.activity.domain.search.SearchRequest;
+import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.handlers.ActivityHandler;
 import com.cema.activity.handlers.HandlerFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -67,7 +67,7 @@ public class ActivityHelperImpl implements ActivityHelper {
 
     @Override
     public SearchResponse search(Activity activity, int page, int size) {
-        log.info("Request to search activities");
+        log.info("Request to search activities with parameters: {}", activity);
         SearchRequest searchRequest = SearchRequest.builder()
                 .activity(activity)
                 .page(page)
@@ -77,4 +77,15 @@ public class ActivityHelperImpl implements ActivityHelper {
 
         return activityHandler.handle(searchRequest);
     }
+
+    @Override
+    public HttpHeaders buildHeaders(SearchResponse searchResponse) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(Headers.TOTAL_ELEMENTS, String.valueOf(searchResponse.getTotalElements()));
+        responseHeaders.set(Headers.TOTAL_PAGES, String.valueOf(searchResponse.getTotalPages()));
+        responseHeaders.set(Headers.CURRENT_PAGE, String.valueOf(searchResponse.getCurrentPage()));
+        return responseHeaders;
+    }
+
+
 }

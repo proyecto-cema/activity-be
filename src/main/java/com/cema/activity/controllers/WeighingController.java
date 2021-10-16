@@ -1,7 +1,7 @@
 package com.cema.activity.controllers;
 
 import com.cema.activity.controllers.helpers.ActivityHelper;
-import com.cema.activity.domain.Inoculation;
+import com.cema.activity.domain.Weighing;
 import com.cema.activity.domain.search.SearchResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,56 +29,55 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1")
-@Api(produces = "application/json", value = "Allows interaction with the inoculation database. V1")
+@Api(produces = "application/json", value = "Allows interaction with the weighing database. V1")
 @Validated
 @Slf4j
-public class InoculationController {
+public class WeighingController {
 
-    private static final String BASE_URL = "/inoculations";
-    private static final String HANDLER_TYPE = "inoculation";
+    private static final String BASE_URL = "/weightings";
+    private static final String HANDLER_TYPE = "weighing";
     private final ActivityHelper activityHelper;
 
-    public InoculationController(ActivityHelper activityHelper) {
+    public WeighingController(ActivityHelper activityHelper) {
         this.activityHelper = activityHelper;
     }
 
-    @ApiOperation(value = "Retrieve an inoculation by inoculation id")
+    @ApiOperation(value = "Retrieve a weighing by weighing id")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully found Inoculation"),
-            @ApiResponse(code = 401, message = "You are not allowed to retrieve this inoculation"),
-            @ApiResponse(code = 404, message = "Inoculation not found")
+            @ApiResponse(code = 200, message = "Successfully found Weighing"),
+            @ApiResponse(code = 404, message = "Weighing not found")
     })
     @GetMapping(value = BASE_URL + "/{activity_id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Inoculation> getInoculationById(
+    public ResponseEntity<Weighing> getWeighingById(
             @ApiParam(
-                    value = "The id of the inoculation you are looking for.",
+                    value = "The id of the weighing you are looking for.",
                     example = "123")
             @PathVariable("activity_id") String activityId,
             @ApiParam(
-                    value = "The cuig of the establishment of the inoculation. Only used if you are admin.",
+                    value = "The cuig of the establishment of the weighing. Only used if you are admin.",
                     example = "312")
             @RequestParam(value = "cuig", required = false) String cuig) {
-        log.info("Request for get Inoculation received.");
+        log.info("Request for get Weighing received.");
 
-        Inoculation result = (Inoculation) activityHelper.get(activityId, HANDLER_TYPE, cuig);
+        Weighing result = (Weighing) activityHelper.get(activityId, HANDLER_TYPE, cuig);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Register a new inoculation to the database")
+    @ApiOperation(value = "Register a new weighing to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Inoculation created successfully"),
-            @ApiResponse(code = 401, message = "You are not allowed to register this inoculation"),
-            @ApiResponse(code = 400, message = "Incorrect inoculation request body.")
+            @ApiResponse(code = 201, message = "Weighing created successfully"),
+            @ApiResponse(code = 401, message = "You are not allowed to register this weighing"),
+            @ApiResponse(code = 400, message = "Incorrect weighing request body.")
     })
     @PostMapping(value = BASE_URL, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Inoculation> registerInoculation(
+    public ResponseEntity<Weighing> registerWeighing(
             @ApiParam(
-                    value = "Inoculation data to be inserted.")
-            @RequestBody @Valid Inoculation inoculation) {
-        log.info("Request for register Inoculation received.");
+                    value = "Weighing data to be inserted.")
+            @RequestBody @Valid Weighing weighing) {
+        log.info("Request for register Weighing received.");
 
-        Inoculation result = (Inoculation) activityHelper.register(inoculation);
+        Weighing result = (Weighing) activityHelper.register(weighing);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -96,48 +94,46 @@ public class InoculationController {
                     value = "The id for the activity we want to delete.",
                     example = "123")
             @PathVariable("activity_id") String activityId) {
-        log.info("Request for delete Inoculation received.");
+        log.info("Request for delete Weighing received.");
 
         activityHelper.delete(activityId, HANDLER_TYPE);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(value = "Modifies an existent inoculation")
+    @ApiOperation(value = "Modifies an existent weighing")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Inoculation modified successfully"),
-            @ApiResponse(code = 401, message = "You are not allowed to update this inoculation"),
-            @ApiResponse(code = 404, message = "The inoculation you were trying to modify doesn't exists")
+            @ApiResponse(code = 200, message = "Weighing modified successfully"),
+            @ApiResponse(code = 404, message = "The weighing you were trying to modify doesn't exists")
     })
     @PutMapping(value = BASE_URL + "/{activity_id}", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Inoculation> updateInoculation(
+    public ResponseEntity<Weighing> updateWeighing(
             @ApiParam(
                     value = "The id for the activity we want to update.",
                     example = "b000bba4-229e-4b59-8548-1c26508e459c")
             @PathVariable("activity_id") String activityId,
             @ApiParam(
-                    value = "The inoculation data we are modifying")
-            @RequestBody Inoculation inoculation) {
-        log.info("Request for update Inoculation received.");
+                    value = "The weighing data we are modifying")
+            @RequestBody Weighing weighing) {
+        log.info("Request for update Weighing received.");
 
-        inoculation.setType(HANDLER_TYPE);
+        weighing.setType(HANDLER_TYPE);
 
-        Inoculation updated = (Inoculation) activityHelper.update(activityId, inoculation);
+        Weighing updated = (Weighing) activityHelper.update(activityId, weighing);
 
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Retrieve a list of inoculations matching the sent data", response = Inoculation.class)
+    @ApiOperation(value = "Retrieve a list of weighings matching the sent data", response = Weighing.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully found inoculations", responseHeaders = {
+            @ApiResponse(code = 200, message = "Successfully found weighings", responseHeaders = {
                     @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
                     @ResponseHeader(name = "total-pages", response = String.class, description = "Total number of pages to navigate"),
                     @ResponseHeader(name = "current-page", response = String.class, description = "The page being returned, zero indexed")
-            }),
-            @ApiResponse(code = 401, message = "You are not allowed to search these inoculations")
+            })
     })
     @PostMapping(value = BASE_URL + "/search", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<Inoculation>> searchInoculations(
+    public ResponseEntity<List<Weighing>> searchWeightings(
             @ApiParam(
                     value = "The page you want to retrieve.",
                     example = "1")
@@ -147,16 +143,15 @@ public class InoculationController {
                     example = "10")
             @RequestParam(value = "size", required = false, defaultValue = "3") int size,
             @ApiParam(
-                    value = "The inoculation data we are searching")
-            @RequestBody Inoculation inoculation) {
-        log.info("Request for search Inoculation received.");
+                    value = "The weighing data we are searching")
+            @RequestBody Weighing weighing) {
+        log.info("Request for search Weighing received.");
 
-        inoculation.setType(HANDLER_TYPE);
-        SearchResponse<Inoculation> searchResponse = activityHelper.search(inoculation, page, size);
+        weighing.setType(HANDLER_TYPE);
+        SearchResponse<Weighing> searchResponse = activityHelper.search(weighing, page, size);
 
-        List<Inoculation> inoculations = searchResponse.getActivities();
+        List<Weighing> weightings = searchResponse.getActivities();
 
-        return ResponseEntity.ok().headers(activityHelper.buildHeaders(searchResponse)).body(inoculations);
+        return ResponseEntity.ok().headers(activityHelper.buildHeaders(searchResponse)).body(weightings);
     }
-
 }
