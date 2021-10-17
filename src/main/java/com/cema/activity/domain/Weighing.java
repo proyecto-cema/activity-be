@@ -20,13 +20,12 @@ import java.util.UUID;
 public class Weighing extends Activity {
 
     @ApiModelProperty(notes = "The weight measures in kilograms", example = "5000")
-    @NotNull(message = "Weight is required")
     private Long weight;
     @ApiModelProperty(notes = "The category of the animal", example = "bull")
     private String category;
-    @ApiModelProperty(notes = "The drug inoculated", example = "small teeth")
+    @ApiModelProperty(notes = "Status notes of the animal's teeth", example = "small teeth")
     private String dentalNotes;
-    @ApiModelProperty(notes = "The tag this activity is associated to. Either this or batchName must be populated", example = "1234")
+    @ApiModelProperty(notes = "The tag this activity is associated to.", example = "1234")
     @NotEmpty(message = "Bovine Tag is required")
     private String bovineTag;
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -17,15 +18,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Activity {
+public class Activity implements Comparable<Activity> {
     @ApiModelProperty(notes = "The id to identify this activity", example = "b000bba4-229e-4b59-8548-1c26508e459c")
     private UUID id;
     @ApiModelProperty(notes = "The name of this activity", example = "Actividad 2021")
     @NotEmpty(message = "Name is required")
     private String name;
-    @ApiModelProperty(notes = "The type of activity", example = "Inoculation|Feeding|Weighing")
+    @ApiModelProperty(notes = "The type of activity", example = "Inoculation|Feeding|Weighing|Ultrasound")
     @NotEmpty(message = "Type is required")
-    @Pattern(regexp = "(?i)inoculation|feeding|weighing")
+    @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound")
     private String type;
     @ApiModelProperty(notes = "The description of this activity", example = "Actividad realizada en invierno.")
     private String description;
@@ -35,4 +36,9 @@ public class Activity {
     @NotEmpty(message = "Cuig is required")
     private String establishmentCuig;
 
+
+    @Override
+    public int compareTo(@NotNull Activity o) {
+        return o.getExecutionDate().compareTo(this.getExecutionDate());
+    }
 }

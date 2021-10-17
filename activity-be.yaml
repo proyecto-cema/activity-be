@@ -20,16 +20,16 @@ spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
       containers:
-        - name: bovine-be
+        - name: activity-be
           image: cemaregistry.azurecr.io/cema/activity-be:$VERSION
           ports:
             - containerPort: 30026
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: 100m
+              cpu: 150m
             limits:
-              cpu: 200m
+              cpu: 250m
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: $ENV
