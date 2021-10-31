@@ -1,11 +1,14 @@
 package com.cema.activity.services.database.impl;
 
 import com.cema.activity.domain.Inoculation;
+import com.cema.activity.domain.Ultrasound;
 import com.cema.activity.domain.Weighing;
 import com.cema.activity.entities.CemaInoculation;
+import com.cema.activity.entities.CemaUltrasound;
 import com.cema.activity.entities.CemaWeighing;
 import com.cema.activity.mapping.ActivityMapper;
 import com.cema.activity.repositories.InoculationRepository;
+import com.cema.activity.repositories.UltrasoundRepository;
 import com.cema.activity.repositories.WeighingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,9 @@ class DatabaseServiceImplTest {
     private InoculationRepository inoculationRepository;
 
     @Mock
+    private UltrasoundRepository ultrasoundRepository;
+
+    @Mock
     private ActivityMapper<Inoculation, CemaInoculation> inoculationMapper;
 
     @Mock
@@ -42,13 +48,16 @@ class DatabaseServiceImplTest {
     @Mock
     private ActivityMapper<Weighing, CemaWeighing> weighingMapper;
 
+    @Mock
+    private ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
+
     private DatabaseServiceImpl databaseService;
 
     @BeforeEach
     public void startUp() {
         openMocks(this);
-        databaseService = new DatabaseServiceImpl(inoculationRepository, weighingRepository,
-                weighingMapper, inoculationMapper);
+        databaseService = new DatabaseServiceImpl(inoculationRepository, weighingRepository, ultrasoundRepository,
+                weighingMapper, inoculationMapper, ultrasoundMapper);
     }
 
     @Test
