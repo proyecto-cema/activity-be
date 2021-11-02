@@ -20,7 +20,8 @@ public class Ultrasound extends Activity {
 
     @ApiModelProperty(notes = "Service number for category", example = "5000")
     private String serviceNumber;
-    @ApiModelProperty(notes = "The result of the ultrasound", example = "pregnant")
+    @ApiModelProperty(notes = "The result of the ultrasound", example = "positive")
+    @Pattern(regexp = "(?i)positive|negative")
     private String result;
     @ApiModelProperty(notes = "The tag this activity is associated to.d", example = "1234")
     @NotEmpty(message = "Bovine Tag is required")
