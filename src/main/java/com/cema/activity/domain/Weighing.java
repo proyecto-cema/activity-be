@@ -21,7 +21,8 @@ public class Weighing extends Activity {
 
     @ApiModelProperty(notes = "The weight measures in kilograms", example = "5000")
     private Long weight;
-    @ApiModelProperty(notes = "The category of the animal", example = "bull")
+    @ApiModelProperty(notes = "The category of the animal", example = "toro")
+    @Pattern(regexp = "(?i)ternero|vaca|toro")
     private String category;
     @ApiModelProperty(notes = "Status notes of the animal's teeth", example = "small teeth")
     private String dentalNotes;
