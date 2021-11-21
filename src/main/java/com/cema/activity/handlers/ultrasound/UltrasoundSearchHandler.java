@@ -5,7 +5,7 @@ import com.cema.activity.domain.search.SearchRequest;
 import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.entities.CemaUltrasound;
 import com.cema.activity.handlers.ActivityHandler;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import com.cema.activity.services.authorization.AuthorizationService;
 import com.cema.activity.services.database.DatabaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public class UltrasoundSearchHandler implements ActivityHandler<SearchRequest, SearchResponse<Ultrasound>> {
 
     private final DatabaseService databaseService;
-    private final ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
+    private final Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
     private final AuthorizationService authorizationService;
 
-    public UltrasoundSearchHandler(DatabaseService databaseService, ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper,
+    public UltrasoundSearchHandler(DatabaseService databaseService, Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper,
                                    AuthorizationService authorizationService) {
         this.databaseService = databaseService;
         this.ultrasoundMapper = ultrasoundMapper;

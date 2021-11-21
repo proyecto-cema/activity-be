@@ -2,69 +2,69 @@ package com.cema.activity.mapping.impl;
 
 import com.cema.activity.domain.Weighing;
 import com.cema.activity.entities.CemaWeighing;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
 @Service
-public class WeighingMapper implements ActivityMapper<Weighing, CemaWeighing> {
+public class WeighingMapper implements Mapper<Weighing, CemaWeighing> {
 
     private static final String TYPE = "Weighing";
 
     @Override
-    public Weighing mapEntityToDomain(CemaWeighing cemaActivity) {
+    public Weighing mapEntityToDomain(CemaWeighing entity) {
         return Weighing.builder()
-                .id(cemaActivity.getId())
-                .name(cemaActivity.getName())
-                .description(cemaActivity.getDescription())
-                .executionDate(cemaActivity.getExecutionDate())
-                .bovineTag(cemaActivity.getBovineTag())
-                .establishmentCuig(cemaActivity.getEstablishmentCuig())
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .executionDate(entity.getExecutionDate())
+                .bovineTag(entity.getBovineTag())
+                .establishmentCuig(entity.getEstablishmentCuig())
                 .type(TYPE)
-                .weight(cemaActivity.getWeight())
-                .category(cemaActivity.getCategory())
-                .dentalNotes(cemaActivity.getDentalNotes())
+                .weight(entity.getWeight())
+                .category(entity.getCategory())
+                .dentalNotes(entity.getDentalNotes())
                 .build();
     }
 
     @Override
-    public CemaWeighing mapDomainToEntity(Weighing activity) {
+    public CemaWeighing mapDomainToEntity(Weighing domain) {
         CemaWeighing cemaWeighing = new CemaWeighing();
 
-        cemaWeighing.setId(activity.getId());
-        cemaWeighing.setEstablishmentCuig(activity.getEstablishmentCuig());
-        cemaWeighing.setName(activity.getName());
-        cemaWeighing.setDescription(activity.getDescription());
-        cemaWeighing.setExecutionDate(activity.getExecutionDate());
-        cemaWeighing.setBovineTag(activity.getBovineTag());
-        cemaWeighing.setWeight(activity.getWeight());
-        cemaWeighing.setCategory(activity.getCategory());
-        cemaWeighing.setDentalNotes(activity.getDentalNotes());
+        cemaWeighing.setId(domain.getId());
+        cemaWeighing.setEstablishmentCuig(domain.getEstablishmentCuig());
+        cemaWeighing.setName(domain.getName());
+        cemaWeighing.setDescription(domain.getDescription());
+        cemaWeighing.setExecutionDate(domain.getExecutionDate());
+        cemaWeighing.setBovineTag(domain.getBovineTag());
+        cemaWeighing.setWeight(domain.getWeight());
+        cemaWeighing.setCategory(domain.getCategory());
+        cemaWeighing.setDentalNotes(domain.getDentalNotes());
 
         return cemaWeighing;
     }
 
     @Override
-    public CemaWeighing updateEntityWithDomain(Weighing weighing, CemaWeighing cemaWeighing) {
+    public CemaWeighing updateEntityWithDomain(Weighing domain, CemaWeighing entity) {
 
-        String name = StringUtils.hasText(weighing.getName()) ? weighing.getName() : cemaWeighing.getName();
-        String description = StringUtils.hasText(weighing.getDescription()) ? weighing.getDescription() : cemaWeighing.getDescription();
-        Date executionDate = weighing.getExecutionDate() != null ? weighing.getExecutionDate() : cemaWeighing.getExecutionDate();
-        Long weight = weighing.getWeight() != null ? weighing.getWeight() : cemaWeighing.getWeight();
-        String category = StringUtils.hasText(weighing.getCategory()) ? weighing.getCategory() : cemaWeighing.getCategory();
-        String dentalNotes = StringUtils.hasText(weighing.getDentalNotes()) ? weighing.getDentalNotes() : cemaWeighing.getDentalNotes();
-        String bovineTag = StringUtils.hasText(weighing.getBovineTag()) ? weighing.getBovineTag() : cemaWeighing.getBovineTag();
+        String name = StringUtils.hasText(domain.getName()) ? domain.getName() : entity.getName();
+        String description = StringUtils.hasText(domain.getDescription()) ? domain.getDescription() : entity.getDescription();
+        Date executionDate = domain.getExecutionDate() != null ? domain.getExecutionDate() : entity.getExecutionDate();
+        Long weight = domain.getWeight() != null ? domain.getWeight() : entity.getWeight();
+        String category = StringUtils.hasText(domain.getCategory()) ? domain.getCategory() : entity.getCategory();
+        String dentalNotes = StringUtils.hasText(domain.getDentalNotes()) ? domain.getDentalNotes() : entity.getDentalNotes();
+        String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
 
-        cemaWeighing.setName(name);
-        cemaWeighing.setDescription(description);
-        cemaWeighing.setExecutionDate(executionDate);
-        cemaWeighing.setWeight(weight);
-        cemaWeighing.setCategory(category);
-        cemaWeighing.setDentalNotes(dentalNotes);
-        cemaWeighing.setBovineTag(bovineTag);
+        entity.setName(name);
+        entity.setDescription(description);
+        entity.setExecutionDate(executionDate);
+        entity.setWeight(weight);
+        entity.setCategory(category);
+        entity.setDentalNotes(dentalNotes);
+        entity.setBovineTag(bovineTag);
 
-        return cemaWeighing;
+        return entity;
     }
 }

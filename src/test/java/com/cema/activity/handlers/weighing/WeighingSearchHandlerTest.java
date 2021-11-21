@@ -4,8 +4,7 @@ import com.cema.activity.domain.Weighing;
 import com.cema.activity.domain.search.SearchRequest;
 import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.entities.CemaWeighing;
-import com.cema.activity.handlers.weighing.WeighingSearchHandler;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import com.cema.activity.services.authorization.AuthorizationService;
 import com.cema.activity.services.database.DatabaseService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +28,7 @@ class WeighingSearchHandlerTest {
     @Mock
     private DatabaseService databaseService;
     @Mock
-    private ActivityMapper<Weighing, CemaWeighing> weighingMapper;
+    private Mapper<Weighing, CemaWeighing> weighingMapper;
     @Mock
     private AuthorizationService authorizationService;
 
