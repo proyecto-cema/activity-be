@@ -9,6 +9,8 @@ import com.cema.activity.handlers.ActivityHandler;
 import com.cema.activity.mapping.impl.UltrasoundMapper;
 import com.cema.activity.repositories.UltrasoundRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,14 @@ public class UltrasoundUpdateHandler implements ActivityHandler<Ultrasound, Ultr
     private final AuthorizationService authorizationService;
     private final UltrasoundMapper ultrasoundMapper;
     private final UltrasoundRepository ultrasoundRepository;
+    private final BovineClientService bovineClientService;
 
     public UltrasoundUpdateHandler(AuthorizationService authorizationService, UltrasoundMapper ultrasoundMapper,
-                                   UltrasoundRepository ultrasoundRepository) {
+                                   UltrasoundRepository ultrasoundRepository, BovineClientService bovineClientService) {
         this.authorizationService = authorizationService;
         this.ultrasoundMapper = ultrasoundMapper;
         this.ultrasoundRepository = ultrasoundRepository;
+        this.bovineClientService = bovineClientService;
     }
 
     @Override
@@ -40,7 +44,12 @@ public class UltrasoundUpdateHandler implements ActivityHandler<Ultrasound, Ultr
             throw new UnauthorizedException(String.format(Messages.OUTSIDE_ESTABLISHMENT, cuig));
         }
 
-        Optional<CemaUltrasound> cemaUltrasoundOptional = ultrasoundRepository.findById(uuid);
+        String tag = activity.getBovineTag();
+        if (!StringUtils.isEmpty(tag)) {
+            bovineClientService.validateBovine(tag, cuig);
+        }
+
+        Optional<CemaUltrasound> cemaUltrasoundOptional = ultrasoundRepository.findCemaUltrasoundByIdAndEstablishmentCuig(uuid, cuig);
         CemaUltrasound cemaUltrasound;
         if (cemaUltrasoundOptional.isPresent()) {
             cemaUltrasound = cemaUltrasoundOptional.get();

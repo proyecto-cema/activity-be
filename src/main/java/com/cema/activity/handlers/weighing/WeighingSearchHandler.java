@@ -33,7 +33,7 @@ public class WeighingSearchHandler implements ActivityHandler<SearchRequest, Sea
     @Override
     public SearchResponse<Weighing> handle(SearchRequest activity) {
         Weighing weighing = (Weighing) activity.getActivity();
-        log.info("Handling deleting of weighing activity {}.", weighing.getId());
+        log.info("Handling search of weighing activity {}.", weighing.getId());
 
         if (!authorizationService.isAdmin()) {
             weighing.setEstablishmentCuig(authorizationService.getCurrentUserCuig());

@@ -1,13 +1,27 @@
 package com.cema.activity.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "ultrasound")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CemaUltrasound {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -38,68 +52,4 @@ public class CemaUltrasound {
 
     @Column(name = "bovine_tag")
     private String bovineTag;
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getServiceNumber() {
-        return this.serviceNumber;
-    }
-
-    public void setServiceNumber(String serviceNumber) {
-        this.serviceNumber = serviceNumber;
-    }
-
-    public String getResultStatus() {
-        return this.resultStatus;
-    }
-
-    public void setResultStatus(String resultStatus) {
-        this.resultStatus = resultStatus;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getExecutionDate() {
-        return this.executionDate;
-    }
-
-    public void setExecutionDate(Date executionDate) {
-        this.executionDate = executionDate;
-    }
-
-    public String getEstablishmentCuig() {
-        return this.establishmentCuig;
-    }
-
-    public void setEstablishmentCuig(String establishmentCuig) {
-        this.establishmentCuig = establishmentCuig;
-    }
-
-    public String getBovineTag() {
-        return this.bovineTag;
-    }
-
-    public void setBovineTag(String bovineTag) {
-        this.bovineTag = bovineTag;
-    }
 }

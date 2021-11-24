@@ -33,7 +33,7 @@ public class InoculationSearchHandler implements ActivityHandler<SearchRequest, 
     @Override
     public SearchResponse<Inoculation> handle(SearchRequest activity) {
         Inoculation inoculation = (Inoculation) activity.getActivity();
-        log.info("Handling deleting of inoculation activity {}.", inoculation.getId());
+        log.info("Handling search of inoculation activity {}.", inoculation.getId());
 
         if (!authorizationService.isAdmin()) {
             inoculation.setEstablishmentCuig(authorizationService.getCurrentUserCuig());

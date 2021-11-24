@@ -5,6 +5,7 @@ import com.cema.activity.exceptions.AlreadyExistsException;
 import com.cema.activity.exceptions.NotFoundException;
 import com.cema.activity.exceptions.UnauthorizedException;
 import com.cema.activity.exceptions.ValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,41 +18,40 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
+@Slf4j
 public class CemaExceptionHandler {
-
-    private final Logger LOG = LoggerFactory.getLogger(CemaExceptionHandler.class);
 
     @ExceptionHandler(AlreadyExistsException.class)
     public final ResponseEntity<Object> handleAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ValidationException.class)
     public final ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public final ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         ErrorResponse error = new ErrorResponse(ex.getMessage(), request.toString());
         return new ResponseEntity(error, HttpStatus.UNAUTHORIZED);
     }
@@ -62,7 +62,7 @@ public class CemaExceptionHandler {
         String message = "Missing or incorrect fields";
         ErrorResponse error = new ErrorResponse(message, request.toString());
         ex.toString();
-        LOG.error("Exception while processing.", ex);
+        log.error("Exception while processing.", ex);
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             error.getViolations().add(
                     new ErrorResponse.Violation(fieldError.getField(), fieldError.getDefaultMessage()));

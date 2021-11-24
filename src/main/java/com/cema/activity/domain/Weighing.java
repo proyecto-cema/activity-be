@@ -32,7 +32,7 @@ public class Weighing extends Activity {
 
     @Builder
     public Weighing(UUID id, @NotEmpty(message = "Name is required") String name,
-                    @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)inoculation|feeding") String type,
+                    @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)(?i)inoculation|feeding|weighing|ultrasound|movement") String type,
                     String description, Date executionDate,
                     @NotEmpty(message = "Cuig is required") String establishmentCuig,
                     Long weight, String category, String dentalNotes, String bovineTag) {

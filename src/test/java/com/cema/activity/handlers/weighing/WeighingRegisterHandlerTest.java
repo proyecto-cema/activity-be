@@ -6,6 +6,7 @@ import com.cema.activity.exceptions.UnauthorizedException;
 import com.cema.activity.mapping.impl.WeighingMapper;
 import com.cema.activity.repositories.WeighingRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,8 @@ class WeighingRegisterHandlerTest {
     private AuthorizationService authorizationService;
     @Mock
     private WeighingRepository weighingRepository;
+    @Mock
+    private BovineClientService bovineClientService;
 
     private WeighingRegisterHandler weighingRegisterHandler;
 
@@ -38,7 +41,8 @@ class WeighingRegisterHandlerTest {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        weighingRegisterHandler = new WeighingRegisterHandler(weighingMapper, authorizationService, weighingRepository);
+        weighingRegisterHandler = new WeighingRegisterHandler(weighingMapper, authorizationService, weighingRepository,
+                bovineClientService);
     }
 
     @Test

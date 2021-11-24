@@ -17,6 +17,7 @@ public class LocationMapper implements Mapper<Location, CemaLocation> {
                 .description(entity.getDescription())
                 .size(entity.getSize())
                 .establishmentCuig(entity.getEstablishmentCuig())
+                .isDefault(entity.isDefault())
                 .build();
     }
 
@@ -27,6 +28,7 @@ public class LocationMapper implements Mapper<Location, CemaLocation> {
                 .description(domain.getDescription())
                 .size(domain.getSize())
                 .establishmentCuig(domain.getEstablishmentCuig())
+                .isDefault(domain.getIsDefault() != null ? domain.getIsDefault() : false)
                 .build();
     }
 
@@ -36,10 +38,12 @@ public class LocationMapper implements Mapper<Location, CemaLocation> {
         String name = StringUtils.hasText(domain.getName()) ? domain.getName() : entity.getName();
         String description = StringUtils.hasText(domain.getDescription()) ? domain.getDescription() : entity.getDescription();
         Long size = domain.getSize() != null ? domain.getSize() : entity.getSize();
+        boolean isDefault = domain.getIsDefault() != null ? domain.getIsDefault() : entity.isDefault();
 
         entity.setName(name);
         entity.setDescription(description);
         entity.setSize(size);
+        entity.setDefault(isDefault);
         return entity;
     }
 }
