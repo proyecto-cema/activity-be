@@ -5,7 +5,7 @@ import com.cema.activity.domain.search.SearchRequest;
 import com.cema.activity.domain.search.SearchResponse;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.handlers.ActivityHandler;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import com.cema.activity.services.authorization.AuthorizationService;
 import com.cema.activity.services.database.DatabaseService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public class InoculationSearchHandler implements ActivityHandler<SearchRequest, SearchResponse<Inoculation>> {
 
     private final DatabaseService databaseService;
-    private final ActivityMapper<Inoculation, CemaInoculation> inoculationMapper;
+    private final Mapper<Inoculation, CemaInoculation> inoculationMapper;
     private final AuthorizationService authorizationService;
 
-    public InoculationSearchHandler(DatabaseService databaseService, ActivityMapper<Inoculation, CemaInoculation> inoculationMapper,
+    public InoculationSearchHandler(DatabaseService databaseService, Mapper<Inoculation, CemaInoculation> inoculationMapper,
                                     AuthorizationService authorizationService) {
         this.databaseService = databaseService;
         this.inoculationMapper = inoculationMapper;

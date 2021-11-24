@@ -6,7 +6,7 @@ import com.cema.activity.domain.Weighing;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.entities.CemaUltrasound;
 import com.cema.activity.entities.CemaWeighing;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.repositories.UltrasoundRepository;
 import com.cema.activity.repositories.WeighingRepository;
@@ -40,16 +40,16 @@ class DatabaseServiceImplTest {
     private UltrasoundRepository ultrasoundRepository;
 
     @Mock
-    private ActivityMapper<Inoculation, CemaInoculation> inoculationMapper;
+    private Mapper<Inoculation, CemaInoculation> inoculationMapper;
 
     @Mock
     private WeighingRepository weighingRepository;
 
     @Mock
-    private ActivityMapper<Weighing, CemaWeighing> weighingMapper;
+    private Mapper<Weighing, CemaWeighing> weighingMapper;
 
     @Mock
-    private ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
+    private Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
 
     private DatabaseServiceImpl databaseService;
 

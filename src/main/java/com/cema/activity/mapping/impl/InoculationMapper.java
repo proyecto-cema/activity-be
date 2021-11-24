@@ -2,82 +2,82 @@ package com.cema.activity.mapping.impl;
 
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.entities.CemaInoculation;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
 @Service
-public class InoculationMapper implements ActivityMapper<Inoculation, CemaInoculation> {
+public class InoculationMapper implements Mapper<Inoculation, CemaInoculation> {
 
     private static final String TYPE = "Inoculation";
 
     @Override
-    public Inoculation mapEntityToDomain(CemaInoculation cemaActivity) {
+    public Inoculation mapEntityToDomain(CemaInoculation entity) {
         return Inoculation.builder()
-                .id(cemaActivity.getId())
-                .name(cemaActivity.getName())
-                .description(cemaActivity.getDescription())
-                .executionDate(cemaActivity.getExecutionDate())
-                .bovineTag(cemaActivity.getBovineTag())
-                .batchName(cemaActivity.getBatchName())
-                .establishmentCuig(cemaActivity.getEstablishmentCuig())
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .executionDate(entity.getExecutionDate())
+                .bovineTag(entity.getBovineTag())
+                .batchName(entity.getBatchName())
+                .establishmentCuig(entity.getEstablishmentCuig())
                 .type(TYPE)
-                .dose(cemaActivity.getDose())
-                .brand(cemaActivity.getBrand())
-                .drug(cemaActivity.getDrug())
-                .product(cemaActivity.getProduct())
+                .dose(entity.getDose())
+                .brand(entity.getBrand())
+                .drug(entity.getDrug())
+                .product(entity.getProduct())
                 .build();
     }
 
     @Override
-    public CemaInoculation mapDomainToEntity(Inoculation activity) {
+    public CemaInoculation mapDomainToEntity(Inoculation domain) {
         CemaInoculation cemaInoculation = new CemaInoculation();
 
-        cemaInoculation.setId(activity.getId());
-        cemaInoculation.setEstablishmentCuig(activity.getEstablishmentCuig());
-        cemaInoculation.setName(activity.getName());
-        cemaInoculation.setDescription(activity.getDescription());
-        cemaInoculation.setExecutionDate(activity.getExecutionDate());
-        cemaInoculation.setBovineTag(activity.getBovineTag());
-        cemaInoculation.setBatchName(activity.getBatchName());
-        cemaInoculation.setDose(activity.getDose());
-        cemaInoculation.setBrand(activity.getBrand());
-        cemaInoculation.setDrug(activity.getDrug());
-        cemaInoculation.setProduct(activity.getProduct());
+        cemaInoculation.setId(domain.getId());
+        cemaInoculation.setEstablishmentCuig(domain.getEstablishmentCuig());
+        cemaInoculation.setName(domain.getName());
+        cemaInoculation.setDescription(domain.getDescription());
+        cemaInoculation.setExecutionDate(domain.getExecutionDate());
+        cemaInoculation.setBovineTag(domain.getBovineTag());
+        cemaInoculation.setBatchName(domain.getBatchName());
+        cemaInoculation.setDose(domain.getDose());
+        cemaInoculation.setBrand(domain.getBrand());
+        cemaInoculation.setDrug(domain.getDrug());
+        cemaInoculation.setProduct(domain.getProduct());
 
         return cemaInoculation;
     }
 
     @Override
-    public CemaInoculation updateEntityWithDomain(Inoculation inoculation, CemaInoculation cemaInoculation) {
-        if (StringUtils.hasText(inoculation.getBatchName())) {
-            cemaInoculation.setBovineTag(null);
-        } else if (StringUtils.hasText(inoculation.getBovineTag())) {
-            cemaInoculation.setBatchName(null);
+    public CemaInoculation updateEntityWithDomain(Inoculation domain, CemaInoculation entity) {
+        if (StringUtils.hasText(domain.getBatchName())) {
+            entity.setBovineTag(null);
+        } else if (StringUtils.hasText(domain.getBovineTag())) {
+            entity.setBatchName(null);
         }
 
-        String name = StringUtils.hasText(inoculation.getName()) ? inoculation.getName() : cemaInoculation.getName();
-        String description = StringUtils.hasText(inoculation.getDescription()) ? inoculation.getDescription() : cemaInoculation.getDescription();
-        Date executionDate = inoculation.getExecutionDate() != null ? inoculation.getExecutionDate() : cemaInoculation.getExecutionDate();
-        Long dose = inoculation.getDose() != null ? inoculation.getDose() : cemaInoculation.getDose();
-        String brand = StringUtils.hasText(inoculation.getBrand()) ? inoculation.getBrand() : cemaInoculation.getBrand();
-        String drug = StringUtils.hasText(inoculation.getDrug()) ? inoculation.getDrug() : cemaInoculation.getDrug();
-        String product = StringUtils.hasText(inoculation.getProduct()) ? inoculation.getProduct() : cemaInoculation.getProduct();
-        String batchName = StringUtils.hasText(inoculation.getBatchName()) ? inoculation.getBatchName() : cemaInoculation.getBatchName();
-        String bovineTag = StringUtils.hasText(inoculation.getBovineTag()) ? inoculation.getBovineTag() : cemaInoculation.getBovineTag();
+        String name = StringUtils.hasText(domain.getName()) ? domain.getName() : entity.getName();
+        String description = StringUtils.hasText(domain.getDescription()) ? domain.getDescription() : entity.getDescription();
+        Date executionDate = domain.getExecutionDate() != null ? domain.getExecutionDate() : entity.getExecutionDate();
+        Long dose = domain.getDose() != null ? domain.getDose() : entity.getDose();
+        String brand = StringUtils.hasText(domain.getBrand()) ? domain.getBrand() : entity.getBrand();
+        String drug = StringUtils.hasText(domain.getDrug()) ? domain.getDrug() : entity.getDrug();
+        String product = StringUtils.hasText(domain.getProduct()) ? domain.getProduct() : entity.getProduct();
+        String batchName = StringUtils.hasText(domain.getBatchName()) ? domain.getBatchName() : entity.getBatchName();
+        String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
 
-        cemaInoculation.setName(name);
-        cemaInoculation.setDescription(description);
-        cemaInoculation.setExecutionDate(executionDate);
-        cemaInoculation.setDose(dose);
-        cemaInoculation.setBrand(brand);
-        cemaInoculation.setDrug(drug);
-        cemaInoculation.setProduct(product);
-        cemaInoculation.setBatchName(batchName);
-        cemaInoculation.setBovineTag(bovineTag);
+        entity.setName(name);
+        entity.setDescription(description);
+        entity.setExecutionDate(executionDate);
+        entity.setDose(dose);
+        entity.setBrand(brand);
+        entity.setDrug(drug);
+        entity.setProduct(product);
+        entity.setBatchName(batchName);
+        entity.setBovineTag(bovineTag);
 
-        return cemaInoculation;
+        return entity;
     }
 }

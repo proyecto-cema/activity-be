@@ -6,7 +6,7 @@ import com.cema.activity.domain.Weighing;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.entities.CemaUltrasound;
 import com.cema.activity.entities.CemaWeighing;
-import com.cema.activity.mapping.ActivityMapper;
+import com.cema.activity.mapping.Mapper;
 import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.repositories.UltrasoundRepository;
 import com.cema.activity.repositories.WeighingRepository;
@@ -25,15 +25,15 @@ public class DatabaseServiceImpl implements DatabaseService {
     private final InoculationRepository inoculationRepository;
     private final WeighingRepository weighingRepository;
     private final UltrasoundRepository ultrasoundRepository;
-    private final ActivityMapper<Weighing, CemaWeighing> weighingMapper;
-    private final ActivityMapper<Inoculation, CemaInoculation> inoculationMapper;
-    private final ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
+    private final Mapper<Weighing, CemaWeighing> weighingMapper;
+    private final Mapper<Inoculation, CemaInoculation> inoculationMapper;
+    private final Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
 
 
     public DatabaseServiceImpl(InoculationRepository inoculationRepository, WeighingRepository weighingRepository,
-                               UltrasoundRepository ultrasoundRepository, ActivityMapper<Weighing,
-            CemaWeighing> weighingMapper, ActivityMapper<Inoculation, CemaInoculation> inoculationMapper,
-                               ActivityMapper<Ultrasound, CemaUltrasound> ultrasoundMapper) {
+                               UltrasoundRepository ultrasoundRepository, Mapper<Weighing,
+                                           CemaWeighing> weighingMapper, Mapper<Inoculation, CemaInoculation> inoculationMapper,
+                               Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper) {
         this.inoculationRepository = inoculationRepository;
         this.weighingRepository = weighingRepository;
         this.ultrasoundRepository = ultrasoundRepository;
