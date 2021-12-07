@@ -26,4 +26,6 @@ public class Location {
     @ApiModelProperty(notes = "The cuig of the establishment this location belongs to.", example = "321")
     @NotEmpty(message = "Cuig is required")
     private String establishmentCuig;
+    @ApiModelProperty(notes = "True if this is the default location where bovines are sent. False by default", example = "False")
+    private Boolean isDefault;
 }

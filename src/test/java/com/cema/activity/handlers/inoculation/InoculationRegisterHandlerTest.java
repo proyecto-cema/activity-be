@@ -7,6 +7,7 @@ import com.cema.activity.exceptions.ValidationException;
 import com.cema.activity.mapping.impl.InoculationMapper;
 import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,8 @@ class InoculationRegisterHandlerTest {
     private AuthorizationService authorizationService;
     @Mock
     private InoculationRepository inoculationRepository;
+    @Mock
+    private BovineClientService bovineClientService;
 
     private InoculationRegisterHandler inoculationRegisterHandler;
 
@@ -39,7 +42,8 @@ class InoculationRegisterHandlerTest {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        inoculationRegisterHandler = new InoculationRegisterHandler(inoculationMapper, authorizationService, inoculationRepository);
+        inoculationRegisterHandler = new InoculationRegisterHandler(inoculationMapper, authorizationService,
+                inoculationRepository, bovineClientService);
     }
 
     @Test

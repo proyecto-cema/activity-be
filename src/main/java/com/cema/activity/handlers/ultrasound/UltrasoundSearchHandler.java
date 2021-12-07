@@ -33,7 +33,7 @@ public class UltrasoundSearchHandler implements ActivityHandler<SearchRequest, S
     @Override
     public SearchResponse<Ultrasound> handle(SearchRequest activity) {
         Ultrasound ultrasound = (Ultrasound) activity.getActivity();
-        log.info("Handling deleting of ultrasound activity {}.", ultrasound.getId());
+        log.info("Handling search of ultrasound activity {}.", ultrasound.getId());
 
         if (!authorizationService.isAdmin()) {
             ultrasound.setEstablishmentCuig(authorizationService.getCurrentUserCuig());

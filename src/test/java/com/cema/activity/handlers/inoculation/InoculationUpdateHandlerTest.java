@@ -9,6 +9,7 @@ import com.cema.activity.exceptions.ValidationException;
 import com.cema.activity.mapping.impl.InoculationMapper;
 import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,11 @@ import org.mockito.Mock;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 class InoculationUpdateHandlerTest {
 
@@ -32,21 +32,24 @@ class InoculationUpdateHandlerTest {
     private InoculationMapper inoculationMapper;
     @Mock
     private InoculationRepository inoculationRepository;
+    @Mock
+    private BovineClientService bovineClientService;
 
     private InoculationUpdateHandler inoculationUpdateHandler;
 
     private String cuig = "321";
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        inoculationUpdateHandler = new InoculationUpdateHandler(authorizationService, inoculationMapper, inoculationRepository);
+        inoculationUpdateHandler = new InoculationUpdateHandler(authorizationService, inoculationMapper,
+                inoculationRepository, bovineClientService);
     }
 
     @Test
-    public void handleShouldUpdateTheInoculationToTheDatabaseWhenCorrect(){
+    public void handleShouldUpdateTheInoculationToTheDatabaseWhenCorrect() {
         UUID uuid = UUID.randomUUID();
         String batchName = "batchName";
 
@@ -58,7 +61,7 @@ class InoculationUpdateHandlerTest {
 
         CemaInoculation cemaInoculation = new CemaInoculation();
         Optional<CemaInoculation> mockCemaInoculationOptional = Optional.of(cemaInoculation);
-        when(inoculationRepository.findById(uuid)).thenReturn(mockCemaInoculationOptional);
+        when(inoculationRepository.findCemaInoculationByIdAndEstablishmentCuig(uuid, cuig)).thenReturn(mockCemaInoculationOptional);
         CemaInoculation updatedCemaInoculation = new CemaInoculation();
         CemaInoculation savedCemaInoculation = new CemaInoculation();
 
@@ -110,7 +113,7 @@ class InoculationUpdateHandlerTest {
     }
 
     @Test
-    public void handleShouldThrowNotFoundExceptionWhenTheEntityDoesNotExistsInTheDatabase(){
+    public void handleShouldThrowNotFoundExceptionWhenTheEntityDoesNotExistsInTheDatabase() {
         UUID uuid = UUID.fromString("1fbb888a-0408-47b1-8c07-a0b1dd685d01");
         String batchName = "batchName";
 

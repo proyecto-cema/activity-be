@@ -7,22 +7,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "inoculation")
+@Table(name = "movement")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CemaInoculation {
+public class CemaMovement {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -34,18 +37,6 @@ public class CemaInoculation {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "dose")
-    private Long dose;
-
-    @Column(name = "brand")
-    private String brand;
-
-    @Column(name = "drug")
-    private String drug;
-
-    @Column(name = "product")
-    private String product;
 
     @Column(name = "description")
     private String description;
@@ -61,4 +52,8 @@ public class CemaInoculation {
 
     @Column(name = "bovine_tag")
     private String bovineTag;
+
+    @OneToOne()
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private CemaLocation location;
 }

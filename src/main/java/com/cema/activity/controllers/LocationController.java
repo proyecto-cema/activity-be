@@ -6,18 +6,22 @@ import com.cema.activity.entities.CemaLocation;
 import com.cema.activity.exceptions.AlreadyExistsException;
 import com.cema.activity.exceptions.NotFoundException;
 import com.cema.activity.exceptions.UnauthorizedException;
+import com.cema.activity.exceptions.ValidationException;
 import com.cema.activity.mapping.impl.LocationMapper;
 import com.cema.activity.repositories.LocationRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.database.DatabaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +49,67 @@ public class LocationController {
     private final AuthorizationService authorizationService;
     private final LocationMapper locationMapper;
     private final LocationRepository locationRepository;
+    private final DatabaseService databaseService;
 
-    public LocationController(AuthorizationService authorizationService, LocationMapper locationMapper, LocationRepository locationRepository) {
+    public LocationController(AuthorizationService authorizationService, LocationMapper locationMapper,
+                              LocationRepository locationRepository, DatabaseService databaseService) {
         this.authorizationService = authorizationService;
         this.locationMapper = locationMapper;
         this.locationRepository = locationRepository;
+        this.databaseService = databaseService;
+    }
+
+    @ApiOperation(value = "Retrieve the default location", response = Location.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found Location"),
+            @ApiResponse(code = 404, message = "No default Location found")
+    })
+    @GetMapping(value = BASE_URL + "/default", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Location> getDefaultLocation(
+            @ApiParam(
+                    value = "The cuig of the establishment of the location. If the user is not admin will be ignored.",
+                    example = "321")
+            @RequestParam(value = "cuig") String cuig) {
+
+        if (!authorizationService.isAdmin()) {
+            cuig = authorizationService.getCurrentUserCuig();
+        }
+        log.info("Request for default location with cuig {}", cuig);
+        CemaLocation cemaLocation = locationRepository.findCemaLocationByEstablishmentCuigAndAndIsDefault(cuig, true);
+        if (cemaLocation == null) {
+            throw new NotFoundException(String.format("There is no default location for cuig %s. Please select one", cuig));
+        }
+        Location location = locationMapper.mapEntityToDomain(cemaLocation);
+
+        return new ResponseEntity<>(location, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Validate a location exists, by location name", response = Location.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found Location"),
+            @ApiResponse(code = 404, message = "Location not found")
+    })
+    @GetMapping(value = BASE_URL + "/validate/{name}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> validateLocationByName(
+            @ApiParam(
+                    value = "The name of the location you are looking for.",
+                    example = "Corral 5")
+            @PathVariable("name") String name,
+            @ApiParam(
+                    value = "The cuig of the establishment of the location. If the user is not admin will be ignored.",
+                    example = "321")
+            @RequestParam(value = "cuig") String cuig) {
+
+        if (!authorizationService.isAdmin()) {
+            cuig = authorizationService.getCurrentUserCuig();
+        }
+        log.info("Request for location with name {} and cuig {}", name, cuig);
+        CemaLocation cemaLocation = locationRepository.findCemaLocationByNameAndEstablishmentCuigIgnoreCase(name, cuig);
+        if (cemaLocation == null) {
+            throw new NotFoundException(String.format("Location with name %s doesn't exits", name));
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "Retrieve a location by location name", response = Location.class)
@@ -81,7 +141,8 @@ public class LocationController {
         return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Register a new location to the database")
+    @PreAuthorize("hasRole('PATRON')")
+    @ApiOperation(value = "Register a new location to the database. If this is the first location registered, then it will be flagged as default")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Location created successfully"),
             @ApiResponse(code = 409, message = "The location you were trying to create already exists"),
@@ -105,13 +166,18 @@ public class LocationController {
         }
 
         cemaLocation = locationMapper.mapDomainToEntity(location);
-
+        if (Boolean.TRUE.equals(location.getIsDefault())) {
+            databaseService.makeAllNonDefault(cuig);
+        }
         locationRepository.save(cemaLocation);
+
+        databaseService.makeFirstDefaultWhenNonAreDefault(cuig);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Delete an existing location by name")
+    @PreAuthorize("hasRole('PATRON')")
+    @ApiOperation(value = "Delete an existing location by name. If the default location is deleted, then the first location will be set as default")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Location deleted successfully"),
             @ApiResponse(code = 404, message = "The location you were trying to reach is not found")
@@ -134,14 +200,23 @@ public class LocationController {
         CemaLocation cemaLocation = locationRepository.findCemaLocationByNameAndEstablishmentCuigIgnoreCase(locationName, cuig);
         if (cemaLocation != null) {
             log.info("Location exists, deleting");
-            locationRepository.delete(cemaLocation);
+            try {
+                locationRepository.delete(cemaLocation);
+            } catch (DataIntegrityViolationException e){
+                log.info("Location referenced from a Movement", e);
+                throw new ValidationException("The location you are trying to delete is being referenced from a Movement");
+            }
+            if (cemaLocation.isDefault()) {
+                databaseService.makeFirstDefault(cuig);
+            }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("Location Not found");
         throw new NotFoundException(String.format("Location %s doesn't exits", locationName));
     }
 
-    @ApiOperation(value = "Modifies an existent Location")
+    @PreAuthorize("hasRole('PATRON')")
+    @ApiOperation(value = "Modifies an existent Location. If the default location is set to false, then the first location will be set as default")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Location modified successfully"),
             @ApiResponse(code = 404, message = "The location you were trying to modify doesn't exists")
@@ -171,10 +246,18 @@ public class LocationController {
             throw new NotFoundException(String.format("Location with name %s doesn't exits", name));
         }
 
+        CemaLocation existingCemaLocation = locationRepository.findCemaLocationByNameAndEstablishmentCuigIgnoreCase(location.getName(), cuig);
+        if (existingCemaLocation != null && !(location.getName().equals(name))) {
+            log.info("Location already exists");
+            throw new AlreadyExistsException(String.format("The name %s is already used in another location", location.getName()));
+        }
 
         cemaLocation = locationMapper.updateEntityWithDomain(location, cemaLocation);
+        if (Boolean.TRUE.equals(location.getIsDefault())) {
+            databaseService.makeAllNonDefaultButThis(cuig, cemaLocation.getId());
+        }
 
-        locationRepository.save(cemaLocation);
+        databaseService.makeFirstDefaultWhenNonAreDefault(cuig);
 
         Location updatedLocation = locationMapper.mapEntityToDomain(cemaLocation);
 

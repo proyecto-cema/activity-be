@@ -1,20 +1,18 @@
-package com.cema.activity.handlers.inoculation;
+package com.cema.activity.handlers.movement;
 
 import com.cema.activity.constants.Messages;
-import com.cema.activity.domain.Inoculation;
-import com.cema.activity.entities.CemaInoculation;
+import com.cema.activity.domain.Movement;
+import com.cema.activity.entities.CemaMovement;
 import com.cema.activity.exceptions.NotFoundException;
 import com.cema.activity.exceptions.UnauthorizedException;
 import com.cema.activity.exceptions.ValidationException;
 import com.cema.activity.handlers.ActivityHandler;
-import com.cema.activity.mapping.impl.InoculationMapper;
-import com.cema.activity.repositories.InoculationRepository;
+import com.cema.activity.mapping.impl.MovementMapper;
+import com.cema.activity.repositories.MovementRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
 import com.cema.activity.services.client.bovine.BovineClientService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,26 +20,26 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class InoculationUpdateHandler implements ActivityHandler<Inoculation, Inoculation> {
+public class MovementUpdateHandler implements ActivityHandler<Movement, Movement> {
 
     private final AuthorizationService authorizationService;
-    private final InoculationMapper inoculationMapper;
-    private final InoculationRepository inoculationRepository;
+    private final MovementMapper movementMapper;
+    private final MovementRepository movementRepository;
     private final BovineClientService bovineClientService;
 
-    public InoculationUpdateHandler(AuthorizationService authorizationService, InoculationMapper inoculationMapper,
-                                    InoculationRepository inoculationRepository, BovineClientService bovineClientService) {
+    public MovementUpdateHandler(AuthorizationService authorizationService, MovementMapper movementMapper,
+                                 MovementRepository movementRepository, BovineClientService bovineClientService) {
         this.authorizationService = authorizationService;
-        this.inoculationMapper = inoculationMapper;
-        this.inoculationRepository = inoculationRepository;
+        this.movementMapper = movementMapper;
+        this.movementRepository = movementRepository;
         this.bovineClientService = bovineClientService;
     }
 
     @Override
-    public Inoculation handle(Inoculation activity) {
+    public Movement handle(Movement activity) {
         String cuig = activity.getEstablishmentCuig();
         UUID uuid = activity.getId();
-        log.info("Handling update of inoculation activity {}.", uuid);
+        log.info("Handling update of movement activity {}.", uuid);
 
         if (!authorizationService.isOnTheSameEstablishment(cuig)) {
             throw new UnauthorizedException(String.format(Messages.OUTSIDE_ESTABLISHMENT, cuig));
@@ -61,16 +59,16 @@ public class InoculationUpdateHandler implements ActivityHandler<Inoculation, In
             bovineClientService.validateBovine(tag, cuig);
         }
 
-        Optional<CemaInoculation> cemaInoculationOptional = inoculationRepository.findCemaInoculationByIdAndEstablishmentCuig(uuid, cuig);
-        CemaInoculation cemaInoculation;
-        if (cemaInoculationOptional.isPresent()) {
-            cemaInoculation = cemaInoculationOptional.get();
-            cemaInoculation = inoculationMapper.updateEntityWithDomain(activity, cemaInoculation);
-            cemaInoculation = inoculationRepository.save(cemaInoculation);
+        Optional<CemaMovement> cemaMovementOptional = movementRepository.findCemaMovementByIdAndEstablishmentCuig(uuid, cuig);
+        CemaMovement cemaMovement;
+        if (cemaMovementOptional.isPresent()) {
+            cemaMovement = cemaMovementOptional.get();
+            cemaMovement = movementMapper.updateEntityWithDomain(activity, cemaMovement);
+            cemaMovement = movementRepository.save(cemaMovement);
         } else {
             throw new NotFoundException(String.format(Messages.ACTIVITY_NOT_FOUND, uuid));
         }
 
-        return inoculationMapper.mapEntityToDomain(cemaInoculation);
+        return movementMapper.mapEntityToDomain(cemaMovement);
     }
 }

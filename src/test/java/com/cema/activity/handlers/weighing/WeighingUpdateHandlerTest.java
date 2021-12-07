@@ -10,6 +10,7 @@ import com.cema.activity.handlers.weighing.WeighingUpdateHandler;
 import com.cema.activity.mapping.impl.WeighingMapper;
 import com.cema.activity.repositories.WeighingRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ class WeighingUpdateHandlerTest {
     private WeighingMapper weighingMapper;
     @Mock
     private WeighingRepository weighingRepository;
+    @Mock
+    private BovineClientService bovineClientService;
 
     private WeighingUpdateHandler weighingUpdateHandler;
 
@@ -42,7 +45,8 @@ class WeighingUpdateHandlerTest {
         openMocks(this);
         when(authorizationService.isOnTheSameEstablishment(cuig)).thenReturn(true);
         when(authorizationService.getCurrentUserCuig()).thenReturn(cuig);
-        weighingUpdateHandler = new WeighingUpdateHandler(authorizationService, weighingMapper, weighingRepository);
+        weighingUpdateHandler = new WeighingUpdateHandler(authorizationService, weighingMapper,
+                weighingRepository, bovineClientService);
     }
 
     @Test
@@ -56,7 +60,7 @@ class WeighingUpdateHandlerTest {
 
         CemaWeighing cemaWeighing = new CemaWeighing();
         Optional<CemaWeighing> mockCemaWeighingOptional = Optional.of(cemaWeighing);
-        when(weighingRepository.findById(uuid)).thenReturn(mockCemaWeighingOptional);
+        when(weighingRepository.findCemaWeighingByIdAndEstablishmentCuig(uuid, cuig)).thenReturn(mockCemaWeighingOptional);
         CemaWeighing updatedCemaWeighing = new CemaWeighing();
         CemaWeighing savedCemaWeighing = new CemaWeighing();
 

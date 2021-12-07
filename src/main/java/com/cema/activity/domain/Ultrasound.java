@@ -30,7 +30,7 @@ public class Ultrasound extends Activity {
     @Builder
     public Ultrasound(UUID id, @NotEmpty(message = "Name is required") String name,
                       @NotEmpty(message = "Type is required")
-                      @Pattern(regexp = "(?i)inoculation|feeding|weighing") String type, String description,
+                      @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement") String type, String description,
                       Date executionDate, @NotEmpty(message = "Cuig is required") String establishmentCuig,
                       String serviceNumber, String result, String bovineTag) {
         super(id, name, type, description, executionDate, establishmentCuig);

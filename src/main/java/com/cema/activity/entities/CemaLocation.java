@@ -43,4 +43,7 @@ public class CemaLocation {
 
     @Column(name = "establishment_cuig")
     private String establishmentCuig;
+
+    @Column(name = "is_default")
+    private boolean isDefault;
 }

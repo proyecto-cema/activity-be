@@ -24,9 +24,9 @@ public class Activity implements Comparable<Activity> {
     @ApiModelProperty(notes = "The name of this activity", example = "Actividad 2021")
     @NotEmpty(message = "Name is required")
     private String name;
-    @ApiModelProperty(notes = "The type of activity", example = "Inoculation|Feeding|Weighing|Ultrasound")
+    @ApiModelProperty(notes = "The type of activity", example = "Inoculation|Feeding|Weighing|Ultrasound|Movement")
     @NotEmpty(message = "Type is required")
-    @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound")
+    @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement")
     private String type;
     @ApiModelProperty(notes = "The description of this activity", example = "Actividad realizada en invierno.")
     private String description;

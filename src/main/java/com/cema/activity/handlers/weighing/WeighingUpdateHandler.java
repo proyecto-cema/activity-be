@@ -10,6 +10,7 @@ import com.cema.activity.handlers.ActivityHandler;
 import com.cema.activity.mapping.impl.WeighingMapper;
 import com.cema.activity.repositories.WeighingRepository;
 import com.cema.activity.services.authorization.AuthorizationService;
+import com.cema.activity.services.client.bovine.BovineClientService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ public class WeighingUpdateHandler implements ActivityHandler<Weighing, Weighing
     private final AuthorizationService authorizationService;
     private final WeighingMapper weighingMapper;
     private final WeighingRepository weighingRepository;
+    private final BovineClientService bovineClientService;
 
     public WeighingUpdateHandler(AuthorizationService authorizationService, WeighingMapper weighingMapper,
-                                 WeighingRepository weighingRepository) {
+                                 WeighingRepository weighingRepository, BovineClientService bovineClientService) {
         this.authorizationService = authorizationService;
         this.weighingMapper = weighingMapper;
         this.weighingRepository = weighingRepository;
+        this.bovineClientService = bovineClientService;
     }
 
     @Override
@@ -42,7 +45,12 @@ public class WeighingUpdateHandler implements ActivityHandler<Weighing, Weighing
             throw new UnauthorizedException(String.format(Messages.OUTSIDE_ESTABLISHMENT, cuig));
         }
 
-        Optional<CemaWeighing> cemaWeighingOptional = weighingRepository.findById(uuid);
+        String tag = activity.getBovineTag();
+        if (!StringUtils.isEmpty(tag)) {
+            bovineClientService.validateBovine(tag, cuig);
+        }
+
+        Optional<CemaWeighing> cemaWeighingOptional = weighingRepository.findCemaWeighingByIdAndEstablishmentCuig(uuid, cuig);
         CemaWeighing cemaWeighing;
         if (cemaWeighingOptional.isPresent()) {
             cemaWeighing = cemaWeighingOptional.get();
