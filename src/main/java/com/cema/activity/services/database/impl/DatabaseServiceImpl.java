@@ -1,9 +1,11 @@
 package com.cema.activity.services.database.impl;
 
+import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.domain.Movement;
 import com.cema.activity.domain.Ultrasound;
 import com.cema.activity.domain.Weighing;
+import com.cema.activity.entities.CemaFeeding;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.entities.CemaLocation;
 import com.cema.activity.entities.CemaMovement;
@@ -11,7 +13,7 @@ import com.cema.activity.entities.CemaUltrasound;
 import com.cema.activity.entities.CemaWeighing;
 import com.cema.activity.exceptions.NotFoundException;
 import com.cema.activity.mapping.Mapper;
-import com.cema.activity.mapping.impl.MovementMapper;
+import com.cema.activity.repositories.FeedingRepository;
 import com.cema.activity.repositories.InoculationRepository;
 import com.cema.activity.repositories.LocationRepository;
 import com.cema.activity.repositories.MovementRepository;
@@ -36,27 +38,33 @@ public class DatabaseServiceImpl implements DatabaseService {
     private final UltrasoundRepository ultrasoundRepository;
     private final LocationRepository locationRepository;
     private final MovementRepository movementRepository;
+    private final FeedingRepository feedingRepository;
     private final Mapper<Weighing, CemaWeighing> weighingMapper;
     private final Mapper<Inoculation, CemaInoculation> inoculationMapper;
     private final Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper;
     private final Mapper<Movement, CemaMovement> movementMapper;
+    private final Mapper<Feeding, CemaFeeding> feedingMapper;
 
 
     public DatabaseServiceImpl(InoculationRepository inoculationRepository, WeighingRepository weighingRepository,
-                               UltrasoundRepository ultrasoundRepository, Mapper<Weighing,
-            CemaWeighing> weighingMapper, Mapper<Inoculation, CemaInoculation> inoculationMapper,
+                               UltrasoundRepository ultrasoundRepository, LocationRepository locationRepository,
+                               MovementRepository movementRepository, Mapper<Weighing, CemaWeighing> weighingMapper,
+                               FeedingRepository feedingRepository,
+                               Mapper<Inoculation, CemaInoculation> inoculationMapper,
                                Mapper<Ultrasound, CemaUltrasound> ultrasoundMapper,
-                               LocationRepository locationRepository, Mapper<Movement, CemaMovement> movementMapper,
-                               MovementRepository movementRepository) {
+                               Mapper<Movement, CemaMovement> movementMapper,
+                               Mapper<Feeding, CemaFeeding> feedingMapper) {
         this.inoculationRepository = inoculationRepository;
         this.weighingRepository = weighingRepository;
         this.ultrasoundRepository = ultrasoundRepository;
+        this.locationRepository = locationRepository;
+        this.movementRepository = movementRepository;
         this.weighingMapper = weighingMapper;
         this.inoculationMapper = inoculationMapper;
         this.ultrasoundMapper = ultrasoundMapper;
-        this.locationRepository = locationRepository;
         this.movementMapper = movementMapper;
-        this.movementRepository = movementRepository;
+        this.feedingMapper = feedingMapper;
+        this.feedingRepository = feedingRepository;
     }
 
     @Override
@@ -93,6 +101,18 @@ public class DatabaseServiceImpl implements DatabaseService {
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Pageable paging = PageRequest.of(page, size, Sort.by("executionDate"));
         return ultrasoundRepository.findAll(Example.of(toSearch, caseInsensitiveExampleMatcher), paging);
+    }
+
+    @Override
+    public Page<CemaFeeding> searchFeedings(Feeding feeding, int page, int size) {
+        CemaFeeding toSearch = feedingMapper.mapDomainToEntity(feeding);
+
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Pageable paging = PageRequest.of(page, size, Sort.by("executionDate"));
+        return feedingRepository.findAll(Example.of(toSearch, caseInsensitiveExampleMatcher), paging);
     }
 
     @Override

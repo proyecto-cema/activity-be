@@ -1,9 +1,11 @@
 package com.cema.activity.services.database;
 
+import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.domain.Movement;
 import com.cema.activity.domain.Ultrasound;
 import com.cema.activity.domain.Weighing;
+import com.cema.activity.entities.CemaFeeding;
 import com.cema.activity.entities.CemaInoculation;
 import com.cema.activity.entities.CemaMovement;
 import com.cema.activity.entities.CemaUltrasound;
@@ -18,6 +20,8 @@ public interface DatabaseService {
     Page<CemaWeighing> searchWeightings(Weighing weighing, int page, int size);
 
     Page<CemaUltrasound> searchUltrasounds(Ultrasound weighing, int page, int size);
+
+    Page<CemaFeeding> searchFeedings(Feeding feeding, int page, int size);
 
     Page<CemaMovement> searchMovements(Movement movement, int page, int size);
 
