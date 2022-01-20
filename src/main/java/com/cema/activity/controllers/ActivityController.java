@@ -3,6 +3,7 @@ package com.cema.activity.controllers;
 import com.cema.activity.constants.Activities;
 import com.cema.activity.controllers.helpers.ActivityHelper;
 import com.cema.activity.domain.Activity;
+import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.domain.Movement;
 import com.cema.activity.domain.Ultrasound;
@@ -99,15 +100,25 @@ public class ActivityController {
                 .type(Activities.MOVEMENT_TYPE)
                 .build();
 
+        Feeding feeding = Feeding.builder()
+                .establishmentCuig(activity.getEstablishmentCuig())
+                .executionDate(activity.getExecutionDate())
+                .description(activity.getDescription())
+                .name(activity.getName())
+                .type(Activities.FEEDING_TYPE)
+                .build();
+
         SearchResponse<Activity> inoculationResponse = activityHelper.search(inoculation, 0, 9999);
         SearchResponse<Activity> weighingResponse = activityHelper.search(weighing, 0, 9999);
         SearchResponse<Activity> ultrasoundResponse = activityHelper.search(ultrasound, 0, 9999);
         SearchResponse<Activity> movementResponse = activityHelper.search(movement, 0, 9999);
+        SearchResponse<Activity> feedingResponse = activityHelper.search(feeding, 0, 9999);
 
         activities.addAll(inoculationResponse.getActivities());
         activities.addAll(weighingResponse.getActivities());
         activities.addAll(ultrasoundResponse.getActivities());
         activities.addAll(movementResponse.getActivities());
+        activities.addAll(feedingResponse.getActivities());
 
         if (futureLimit != -1) {
             Calendar futureLimitCalendar = Calendar.getInstance();
