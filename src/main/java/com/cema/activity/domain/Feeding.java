@@ -22,14 +22,14 @@ public class Feeding extends Activity {
     private String food;
     @ApiModelProperty(notes = "The amount of food used", example = "500")
     private Long amount;
-    @ApiModelProperty(notes = "The tag this activity is associated to.d", example = "1234")
+    @ApiModelProperty(notes = "The tag this activity is associated to", example = "1234")
     @NotEmpty(message = "Bovine Tag is required")
     private String bovineTag;
 
     @Builder
     public Feeding(UUID id, @NotEmpty(message = "Name is required") String name,
                    @NotEmpty(message = "Type is required")
-                      @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement") String type, String description,
+                   @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement") String type, String description,
                    Date executionDate, @NotEmpty(message = "Cuig is required") String establishmentCuig,
                    String food, Long amount, String bovineTag) {
         super(id, name, type, description, executionDate, establishmentCuig);

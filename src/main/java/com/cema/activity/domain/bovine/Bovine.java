@@ -1,4 +1,4 @@
-package com.cema.activity.domain;
+package com.cema.activity.domain.bovine;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
