@@ -35,6 +35,8 @@ public class Activity implements Comparable<Activity> {
     @ApiModelProperty(notes = "The cuig of the establishment this activity belongs to.", example = "321")
     @NotEmpty(message = "Cuig is required")
     private String establishmentCuig;
+    @ApiModelProperty(notes = "The user name of the person who is going to complete this activity", example = "merlinds")
+    private String workerUserName;
 
 
     @Override

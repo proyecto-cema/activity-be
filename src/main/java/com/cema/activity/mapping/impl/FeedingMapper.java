@@ -25,6 +25,7 @@ public class FeedingMapper implements Mapper<Feeding, CemaFeeding> {
                 .type(TYPE)
                 .food(entity.getFood())
                 .amount(entity.getAmount())
+                .workerUserName(entity.getWorkerUsername())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class FeedingMapper implements Mapper<Feeding, CemaFeeding> {
         cemaFeeding.setBovineTag(domain.getBovineTag());
         cemaFeeding.setFood(domain.getFood());
         cemaFeeding.setAmount(domain.getAmount());
+        cemaFeeding.setWorkerUsername(domain.getWorkerUserName());
 
         return cemaFeeding;
     }
@@ -53,6 +55,7 @@ public class FeedingMapper implements Mapper<Feeding, CemaFeeding> {
         String food = domain.getFood() != null ? domain.getFood() : entity.getFood();
         Long weight = domain.getAmount() != null ? domain.getAmount() : entity.getAmount();
         String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
+        String workerUsername = StringUtils.hasText(domain.getWorkerUserName()) ? domain.getWorkerUserName() : entity.getWorkerUsername();
 
         entity.setName(name);
         entity.setDescription(description);
@@ -60,6 +63,7 @@ public class FeedingMapper implements Mapper<Feeding, CemaFeeding> {
         entity.setFood(food);
         entity.setAmount(weight);
         entity.setBovineTag(bovineTag);
+        entity.setWorkerUsername(workerUsername);
 
         return entity;
     }

@@ -30,8 +30,8 @@ public class Movement extends Activity {
     public Movement(UUID id, @NotEmpty(message = "Name is required") String name,
                     @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement") String type,
                     String description, Date executionDate, @NotEmpty(message = "Cuig is required") String establishmentCuig,
-                    String locationName, String bovineTag, String batchName) {
-        super(id, name, type, description, executionDate, establishmentCuig);
+                    String locationName, String bovineTag, String batchName, String workerUserName) {
+        super(id, name, type, description, executionDate, establishmentCuig, workerUserName);
         this.locationName = locationName;
         this.bovineTag = bovineTag;
         this.batchName = batchName;

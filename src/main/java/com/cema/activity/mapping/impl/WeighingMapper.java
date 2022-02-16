@@ -26,6 +26,7 @@ public class WeighingMapper implements Mapper<Weighing, CemaWeighing> {
                 .weight(entity.getWeight())
                 .category(entity.getCategory())
                 .dentalNotes(entity.getDentalNotes())
+                .workerUserName(entity.getWorkerUsername())
                 .build();
     }
 
@@ -42,6 +43,7 @@ public class WeighingMapper implements Mapper<Weighing, CemaWeighing> {
         cemaWeighing.setWeight(domain.getWeight());
         cemaWeighing.setCategory(domain.getCategory());
         cemaWeighing.setDentalNotes(domain.getDentalNotes());
+        cemaWeighing.setWorkerUsername(domain.getWorkerUserName());
 
         return cemaWeighing;
     }
@@ -56,6 +58,7 @@ public class WeighingMapper implements Mapper<Weighing, CemaWeighing> {
         String category = StringUtils.hasText(domain.getCategory()) ? domain.getCategory() : entity.getCategory();
         String dentalNotes = StringUtils.hasText(domain.getDentalNotes()) ? domain.getDentalNotes() : entity.getDentalNotes();
         String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
+        String workerUsername = StringUtils.hasText(domain.getWorkerUserName()) ? domain.getWorkerUserName() : entity.getWorkerUsername();
 
         entity.setName(name);
         entity.setDescription(description);
@@ -64,6 +67,7 @@ public class WeighingMapper implements Mapper<Weighing, CemaWeighing> {
         entity.setCategory(category);
         entity.setDentalNotes(dentalNotes);
         entity.setBovineTag(bovineTag);
+        entity.setWorkerUsername(workerUsername);
 
         return entity;
     }

@@ -52,4 +52,7 @@ public class CemaUltrasound {
 
     @Column(name = "bovine_tag")
     private String bovineTag;
+
+    @Column(name = "worker_username")
+    private String workerUsername;
 }

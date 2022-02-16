@@ -1,5 +1,6 @@
 package com.cema.activity.services.database.impl;
 
+import com.cema.activity.domain.Activity;
 import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.domain.Movement;
@@ -28,7 +29,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseServiceImpl implements DatabaseService {
@@ -168,5 +172,23 @@ public class DatabaseServiceImpl implements DatabaseService {
         cemaMovement = movementRepository.save(cemaMovement);
 
         movement.setId(cemaMovement.getId());
+    }
+
+    @Override
+    public List<Activity> getAllUsersToNotifyToday(){
+        List<Activity> activities = new ArrayList<>();
+        List<CemaFeeding> feedings = feedingRepository.getAllForToday();
+        List<CemaInoculation> inoculations = inoculationRepository.getAllForToday();
+        List<CemaMovement> movements = movementRepository.getAllForToday();
+        List<CemaUltrasound> ultrasounds = ultrasoundRepository.getAllForToday();
+        List<CemaWeighing> weightings = weighingRepository.getAllForToday();
+
+        activities.addAll(feedings.stream().map(feedingMapper::mapEntityToDomain).collect(Collectors.toList()));
+        activities.addAll(inoculations.stream().map(inoculationMapper::mapEntityToDomain).collect(Collectors.toList()));
+        activities.addAll(movements.stream().map(movementMapper::mapEntityToDomain).collect(Collectors.toList()));
+        activities.addAll(ultrasounds.stream().map(ultrasoundMapper::mapEntityToDomain).collect(Collectors.toList()));
+        activities.addAll(weightings.stream().map(weighingMapper::mapEntityToDomain).collect(Collectors.toList()));
+
+        return activities;
     }
 }

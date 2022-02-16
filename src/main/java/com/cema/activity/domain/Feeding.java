@@ -31,8 +31,8 @@ public class Feeding extends Activity {
                    @NotEmpty(message = "Type is required")
                    @Pattern(regexp = "(?i)inoculation|feeding|weighing|ultrasound|movement") String type, String description,
                    Date executionDate, @NotEmpty(message = "Cuig is required") String establishmentCuig,
-                   String food, Long amount, String bovineTag) {
-        super(id, name, type, description, executionDate, establishmentCuig);
+                   String food, Long amount, String bovineTag, String workerUserName) {
+        super(id, name, type, description, executionDate, establishmentCuig, workerUserName);
         this.food = food;
         this.amount = amount;
         this.bovineTag = bovineTag;

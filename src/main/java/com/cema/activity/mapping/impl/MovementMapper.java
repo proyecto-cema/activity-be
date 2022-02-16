@@ -25,6 +25,7 @@ public class MovementMapper implements Mapper<Movement, CemaMovement> {
                 .type(TYPE)
                 .locationName(entity.getLocation().getName())
                 .name(entity.getName())
+                .workerUserName(entity.getWorkerUsername())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class MovementMapper implements Mapper<Movement, CemaMovement> {
                 .executionDate(domain.getExecutionDate())
                 .id(domain.getId())
                 .name(domain.getName())
+                .workerUsername(domain.getWorkerUserName())
                 .build();
     }
 
@@ -54,13 +56,14 @@ public class MovementMapper implements Mapper<Movement, CemaMovement> {
         Date executionDate = domain.getExecutionDate() != null ? domain.getExecutionDate() : entity.getExecutionDate();
         String batchName = StringUtils.hasText(domain.getBatchName()) ? domain.getBatchName() : entity.getBatchName();
         String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
-
+        String workerUsername = StringUtils.hasText(domain.getWorkerUserName()) ? domain.getWorkerUserName() : entity.getWorkerUsername();
 
         entity.setName(name);
         entity.setDescription(description);
         entity.setExecutionDate(executionDate);
         entity.setBatchName(batchName);
         entity.setBovineTag(bovineTag);
+        entity.setWorkerUsername(workerUsername);
 
         return entity;
     }

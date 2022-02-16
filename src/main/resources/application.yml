@@ -30,13 +30,20 @@ spring:
     password: Z+8_6mKrw%Gq3_Sp
 back-end:
   users:
-    url: "http://localhost:30023/v1/users"
+    url: "http://localhost:30023/v1/"
   bovine:
     url: "http://localhost:30024/v1/"
   administration:
     url: "http://localhost:30025/v1/"
   economic:
     url: "http://localhost:30027/v1/"
+
+notification:
+  text:
+    sid: "AC72e74858920564e9d67de6bf10ee548a"
+    token: "11facae68ebc31db00bfc3dcb0c730e1"
+    sender: "+19377313733"
+    country-code: "+54"
 
 ---
 spring:
@@ -47,7 +54,7 @@ spring:
       on-profile: qa
 back-end:
   users:
-    url: "http://192.168.100.5:30023/v1/users"
+    url: "http://192.168.100.5:30023/v1/"
   bovine:
     url: "http://192.168.100.5:30024/v1/"
   administration:
@@ -64,7 +71,7 @@ spring:
       on-profile: prod
 back-end:
   users:
-    url: "http://192.168.100.6:30023/v1/users"
+    url: "http://192.168.100.6:30023/v1/"
   bovine:
     url: "http://192.168.100.6:30024/v1/"
   administration:
