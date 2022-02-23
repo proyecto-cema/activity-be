@@ -53,6 +53,9 @@ public class CemaMovement {
     @Column(name = "bovine_tag")
     private String bovineTag;
 
+    @Column(name = "worker_username")
+    private String workerUsername;
+
     @OneToOne()
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private CemaLocation location;

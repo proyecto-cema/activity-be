@@ -35,8 +35,8 @@ public class Weighing extends Activity {
                     @NotEmpty(message = "Type is required") @Pattern(regexp = "(?i)(?i)inoculation|feeding|weighing|ultrasound|movement") String type,
                     String description, Date executionDate,
                     @NotEmpty(message = "Cuig is required") String establishmentCuig,
-                    Long weight, String category, String dentalNotes, String bovineTag) {
-        super(id, name, type, description, executionDate, establishmentCuig);
+                    Long weight, String category, String dentalNotes, String bovineTag, String workerUserName) {
+        super(id, name, type, description, executionDate, establishmentCuig, workerUserName);
         this.weight = weight;
         this.category = category;
         this.dentalNotes = dentalNotes;

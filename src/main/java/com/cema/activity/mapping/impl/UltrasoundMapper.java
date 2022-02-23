@@ -25,6 +25,7 @@ public class UltrasoundMapper implements Mapper<Ultrasound, CemaUltrasound> {
                 .type(TYPE)
                 .serviceNumber(entity.getServiceNumber())
                 .result(entity.getResultStatus())
+                .workerUserName(entity.getWorkerUsername())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class UltrasoundMapper implements Mapper<Ultrasound, CemaUltrasound> {
         cemaUltrasound.setBovineTag(domain.getBovineTag());
         cemaUltrasound.setServiceNumber(domain.getServiceNumber());
         cemaUltrasound.setResultStatus(domain.getResult());
+        cemaUltrasound.setWorkerUsername(domain.getWorkerUserName());
 
         return cemaUltrasound;
     }
@@ -53,6 +55,7 @@ public class UltrasoundMapper implements Mapper<Ultrasound, CemaUltrasound> {
         String result = domain.getResult() != null ? domain.getResult() : entity.getResultStatus();
         String serviceNumber = StringUtils.hasText(domain.getServiceNumber()) ? domain.getServiceNumber() : entity.getServiceNumber();
         String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
+        String workerUsername = StringUtils.hasText(domain.getWorkerUserName()) ? domain.getWorkerUserName() : entity.getWorkerUsername();
 
         entity.setName(name);
         entity.setDescription(description);
@@ -60,6 +63,7 @@ public class UltrasoundMapper implements Mapper<Ultrasound, CemaUltrasound> {
         entity.setResultStatus(result);
         entity.setServiceNumber(serviceNumber);
         entity.setBovineTag(bovineTag);
+        entity.setWorkerUsername(workerUsername);
 
         return entity;
     }

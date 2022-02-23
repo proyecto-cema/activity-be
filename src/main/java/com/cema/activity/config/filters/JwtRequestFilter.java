@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     public JwtRequestFilter(RestTemplate restTemplate, @Value("${back-end.users.url}") String url) {
         this.restTemplate = restTemplate;
-        this.url = url;
+        this.url = url + "users";
     }
 
     @Override

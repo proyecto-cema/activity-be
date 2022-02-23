@@ -28,6 +28,7 @@ public class InoculationMapper implements Mapper<Inoculation, CemaInoculation> {
                 .brand(entity.getBrand())
                 .drug(entity.getDrug())
                 .product(entity.getProduct())
+                .workerUserName(entity.getWorkerUsername())
                 .build();
     }
 
@@ -46,6 +47,7 @@ public class InoculationMapper implements Mapper<Inoculation, CemaInoculation> {
         cemaInoculation.setBrand(domain.getBrand());
         cemaInoculation.setDrug(domain.getDrug());
         cemaInoculation.setProduct(domain.getProduct());
+        cemaInoculation.setWorkerUsername(domain.getWorkerUserName());
 
         return cemaInoculation;
     }
@@ -67,6 +69,7 @@ public class InoculationMapper implements Mapper<Inoculation, CemaInoculation> {
         String product = StringUtils.hasText(domain.getProduct()) ? domain.getProduct() : entity.getProduct();
         String batchName = StringUtils.hasText(domain.getBatchName()) ? domain.getBatchName() : entity.getBatchName();
         String bovineTag = StringUtils.hasText(domain.getBovineTag()) ? domain.getBovineTag() : entity.getBovineTag();
+        String workerUsername = StringUtils.hasText(domain.getWorkerUserName()) ? domain.getWorkerUserName() : entity.getWorkerUsername();
 
         entity.setName(name);
         entity.setDescription(description);
@@ -77,6 +80,7 @@ public class InoculationMapper implements Mapper<Inoculation, CemaInoculation> {
         entity.setProduct(product);
         entity.setBatchName(batchName);
         entity.setBovineTag(bovineTag);
+        entity.setWorkerUsername(workerUsername);
 
         return entity;
     }
