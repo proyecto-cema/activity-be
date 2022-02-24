@@ -1,9 +1,11 @@
 package com.cema.activity.controllers;
 
 import com.cema.activity.controllers.helpers.ActivityHelper;
+import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Inoculation;
 import com.cema.activity.domain.search.SearchResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @RestController
@@ -127,7 +130,7 @@ public class InoculationController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Retrieve a list of inoculations matching the sent data", response = Inoculation.class)
+    @ApiOperation(value = "Retrieve a list of inoculations matching the sent data", response = Inoculation.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found inoculations", responseHeaders = {
                     @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
@@ -152,6 +155,89 @@ public class InoculationController {
         log.info("Request for search Inoculation received.");
 
         inoculation.setType(HANDLER_TYPE);
+        SearchResponse<Inoculation> searchResponse = activityHelper.search(inoculation, page, size);
+
+        List<Inoculation> inoculations = searchResponse.getActivities();
+
+        return ResponseEntity.ok().headers(activityHelper.buildHeaders(searchResponse)).body(inoculations);
+    }
+
+    @ApiOperation(value = "Retrieve a list of inoculations matching the sent data", response = Inoculation.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found inoculations", responseHeaders = {
+                    @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
+                    @ResponseHeader(name = "total-pages", response = String.class, description = "Total number of pages to navigate"),
+                    @ResponseHeader(name = "current-page", response = String.class, description = "The page being returned, zero indexed")
+            }),
+            @ApiResponse(code = 401, message = "You are not allowed to search these inoculations")
+    })
+    @GetMapping(value = BASE_URL + "/search", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Inoculation>> getInoculations(
+            @ApiParam(
+                    value = "The page you want to retrieve.",
+                    example = "1")
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @ApiParam(
+                    value = "The maximum number of cows to return per page.",
+                    example = "10")
+            @RequestParam(value = "size", required = false, defaultValue = "3") int size,
+            @ApiParam(
+                    value = "The name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "name", required = false) String name,
+            @ApiParam(
+                    value = "The description of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "description", required = false) String description,
+            @ApiParam(
+                    value = "The cuig of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "cuig", required = false) String cuig,
+            @ApiParam(
+                    value = "The worker name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "worker", required = false) String worker,
+            @ApiParam(
+                    value = "The tag of the bovine innoculated",
+                    example = "1234")
+            @RequestParam(value = "tag", required = false) String tag,
+            @ApiParam(
+                    value = "The dose to be innoculated",
+                    example = "1234")
+            @RequestParam(value = "dose", required = false) Long dose,
+            @ApiParam(
+                    value = "The brand to be innoculated",
+                    example = "MERCK")
+            @RequestParam(value = "brand", required = false) String brand,
+            @ApiParam(
+                    value = "The drug to be innoculated",
+                    example = "fenbendazole")
+            @RequestParam(value = "drug", required = false) String drug,
+            @ApiParam(
+                    value = "The product to be innoculated",
+                    example = "safe-guard")
+            @RequestParam(value = "product", required = false) String product,
+            @ApiParam(
+                    value = "The batchName of the batch innoculated",
+                    example = "the_batch")
+            @RequestParam(value = "batchName", required = false) String batchName) {
+        
+        log.info("Request for search Inoculation received.");
+
+        Inoculation inoculation = Inoculation.builder()
+                .name(name)
+                .description(description)
+                .establishmentCuig(cuig)
+                .workerUserName(worker)
+                .type(HANDLER_TYPE)
+                .bovineTag(tag)
+                .dose(dose)
+                .brand(brand)
+                .drug(drug)
+                .product(product)
+                .batchName(batchName)
+                .build();
+
         SearchResponse<Inoculation> searchResponse = activityHelper.search(inoculation, page, size);
 
         List<Inoculation> inoculations = searchResponse.getActivities();

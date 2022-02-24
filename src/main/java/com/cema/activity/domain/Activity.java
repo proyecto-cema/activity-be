@@ -1,5 +1,6 @@
 package com.cema.activity.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Activity implements Comparable<Activity> {
     @ApiModelProperty(notes = "The description of this activity", example = "Actividad realizada en invierno.")
     private String description;
     @ApiModelProperty(notes = "The date when this activity was executed")
+    @JsonFormat(timezone = "America/Buenos_Aires")
     private Date executionDate;
     @ApiModelProperty(notes = "The cuig of the establishment this activity belongs to.", example = "321")
     @NotEmpty(message = "Cuig is required")
