@@ -1,6 +1,7 @@
 package com.cema.activity.controllers;
 
 import com.cema.activity.controllers.helpers.ActivityHelper;
+import com.cema.activity.domain.Ultrasound;
 import com.cema.activity.domain.Weighing;
 import com.cema.activity.domain.search.SearchResponse;
 import io.swagger.annotations.Api;
@@ -124,7 +125,7 @@ public class WeighingController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Retrieve a list of weighings matching the sent data", response = Weighing.class)
+    @ApiOperation(value = "Retrieve a list of weighings matching the sent data", response = Weighing.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found weighings", responseHeaders = {
                     @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
@@ -148,6 +149,78 @@ public class WeighingController {
         log.info("Request for search Weighing received.");
 
         weighing.setType(HANDLER_TYPE);
+        SearchResponse<Weighing> searchResponse = activityHelper.search(weighing, page, size);
+
+        List<Weighing> weightings = searchResponse.getActivities();
+
+        return ResponseEntity.ok().headers(activityHelper.buildHeaders(searchResponse)).body(weightings);
+    }
+
+    @ApiOperation(value = "Retrieve a list of weighings matching the sent data", response = Weighing.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found weighings", responseHeaders = {
+                    @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
+                    @ResponseHeader(name = "total-pages", response = String.class, description = "Total number of pages to navigate"),
+                    @ResponseHeader(name = "current-page", response = String.class, description = "The page being returned, zero indexed")
+            })
+    })
+    @GetMapping(value = BASE_URL + "/search", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Weighing>> getWeightings(
+            @ApiParam(
+                    value = "The page you want to retrieve.",
+                    example = "1")
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @ApiParam(
+                    value = "The maximum number of cows to return per page.",
+                    example = "10")
+            @RequestParam(value = "size", required = false, defaultValue = "3") int size,
+            @ApiParam(
+                    value = "The name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "name", required = false) String name,
+            @ApiParam(
+                    value = "The description of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "description", required = false) String description,
+            @ApiParam(
+                    value = "The cuig of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "cuig", required = false) String cuig,
+            @ApiParam(
+                    value = "The worker name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "worker", required = false) String worker,
+            @ApiParam(
+                    value = "The dentalNotes of the activity",
+                    example = "Altos dientes")
+            @RequestParam(value = "dentalNotes", required = false) String dentalNotes,
+            @ApiParam(
+                    value = "The category of the activity",
+                    example = "Vaca")
+            @RequestParam(value = "category", required = false) String category,
+            @ApiParam(
+                    value = "The tag of the bovine",
+                    example = "1234")
+            @RequestParam(value = "tag", required = false) String tag,
+            @ApiParam(
+                    value = "The weight of the bovine",
+                    example = "1234")
+            @RequestParam(value = "weight", required = false) Long weight) {
+
+        log.info("Request for search Weighing received.");
+
+        Weighing weighing = Weighing.builder()
+                .name(name)
+                .description(description)
+                .establishmentCuig(cuig)
+                .workerUserName(worker)
+                .type(HANDLER_TYPE)
+                .bovineTag(tag)
+                .dentalNotes(dentalNotes)
+                .category(category)
+                .weight(weight)
+                .build();
+
         SearchResponse<Weighing> searchResponse = activityHelper.search(weighing, page, size);
 
         List<Weighing> weightings = searchResponse.getActivities();

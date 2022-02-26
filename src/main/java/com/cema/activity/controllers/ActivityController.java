@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -143,14 +142,10 @@ public class ActivityController {
         activities.addAll(feedingResponse.getActivities());
 
         if (futureLimit != -1) {
-            Calendar futureLimitCalendar = Calendar.getInstance();
-            futureLimitCalendar.add(Calendar.DATE, futureLimit);
-            activities = activities.stream().filter(activity1 -> activity1.getExecutionDate().before(futureLimitCalendar.getTime())).collect(Collectors.toList());
+            activities = activities.stream().filter(activity1 -> isBeforeLimit(activity1.getExecutionDate(), futureLimit)).collect(Collectors.toList());
         }
         if (pastLimit != -1) {
-            Calendar pastLimitCalendar = Calendar.getInstance();
-            pastLimitCalendar.add(Calendar.DATE, -pastLimit);
-            activities = activities.stream().filter(activity1 -> activity1.getExecutionDate().after(pastLimitCalendar.getTime())).collect(Collectors.toList());
+            activities = activities.stream().filter(activity1 -> isAfterLimit(activity1.getExecutionDate(), pastLimit)).collect(Collectors.toList());
         }
 
         Collections.sort(activities);
@@ -245,18 +240,28 @@ public class ActivityController {
         activities.addAll(feedingResponse.getActivities());
 
         if (futureLimit != -1) {
-            Calendar futureLimitCalendar = Calendar.getInstance();
-            futureLimitCalendar.add(Calendar.DATE, futureLimit);
-            activities = activities.stream().filter(activity1 -> activity1.getExecutionDate().before(futureLimitCalendar.getTime())).collect(Collectors.toList());
+            activities = activities.stream().filter(activity1 -> isBeforeLimit(activity1.getExecutionDate(), futureLimit)).collect(Collectors.toList());
         }
         if (pastLimit != -1) {
-            Calendar pastLimitCalendar = Calendar.getInstance();
-            pastLimitCalendar.add(Calendar.DATE, -pastLimit);
-            activities = activities.stream().filter(activity1 -> activity1.getExecutionDate().after(pastLimitCalendar.getTime())).collect(Collectors.toList());
+            activities = activities.stream().filter(activity1 -> isAfterLimit(activity1.getExecutionDate(), pastLimit)).collect(Collectors.toList());
         }
 
         Collections.sort(activities);
 
         return ResponseEntity.ok().body(activities);
+    }
+
+    private boolean isBeforeLimit(Date toCheck, int futureLimit) {
+        LocalDate date = toCheck.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate limit = LocalDate.now();
+        limit = limit.plusDays(futureLimit);
+        return date.isBefore(limit) || date.equals(limit);
+    }
+
+    private boolean isAfterLimit(Date toCheck, int pastLimit) {
+        LocalDate date = toCheck.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate limit = LocalDate.now();
+        limit = limit.minusDays(pastLimit);
+        return date.isAfter(limit) || date.equals(limit);
     }
 }

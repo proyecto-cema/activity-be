@@ -1,6 +1,7 @@
 package com.cema.activity.controllers;
 
 import com.cema.activity.controllers.helpers.ActivityHelper;
+import com.cema.activity.domain.Feeding;
 import com.cema.activity.domain.Ultrasound;
 import com.cema.activity.domain.search.SearchResponse;
 import io.swagger.annotations.Api;
@@ -126,7 +127,7 @@ public class UltrasoundController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Retrieve a list of ultrasounds matching the sent data", response = Ultrasound.class)
+    @ApiOperation(value = "Retrieve a list of ultrasounds matching the sent data", response = Ultrasound.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found ultrasounds", responseHeaders = {
                     @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
@@ -150,6 +151,72 @@ public class UltrasoundController {
         log.info("Request for search Ultrasound received.");
 
         ultrasound.setType(HANDLER_TYPE);
+        SearchResponse<Ultrasound> searchResponse = activityHelper.search(ultrasound, page, size);
+
+        List<Ultrasound> weightings = searchResponse.getActivities();
+
+        return ResponseEntity.ok().headers(activityHelper.buildHeaders(searchResponse)).body(weightings);
+    }
+
+    @ApiOperation(value = "Retrieve a list of ultrasounds matching the sent data", response = Ultrasound.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found ultrasounds", responseHeaders = {
+                    @ResponseHeader(name = "total-elements", response = String.class, description = "Total number of search results"),
+                    @ResponseHeader(name = "total-pages", response = String.class, description = "Total number of pages to navigate"),
+                    @ResponseHeader(name = "current-page", response = String.class, description = "The page being returned, zero indexed")
+            })
+    })
+    @GetMapping(value = BASE_URL + "/search", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Ultrasound>> getWeightings(
+            @ApiParam(
+                    value = "The page you want to retrieve.",
+                    example = "1")
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @ApiParam(
+                    value = "The maximum number of cows to return per page.",
+                    example = "10")
+            @RequestParam(value = "size", required = false, defaultValue = "3") int size,
+            @ApiParam(
+                    value = "The name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "name", required = false) String name,
+            @ApiParam(
+                    value = "The description of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "description", required = false) String description,
+            @ApiParam(
+                    value = "The cuig of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "cuig", required = false) String cuig,
+            @ApiParam(
+                    value = "The worker name of the activity",
+                    example = "Actividad")
+            @RequestParam(value = "worker", required = false) String worker,
+            @ApiParam(
+                    value = "The serviceNumber of the activity",
+                    example = "564654")
+            @RequestParam(value = "serviceNumber", required = false) String serviceNumber,
+            @ApiParam(
+                    value = "The result of the activity",
+                    example = "10")
+            @RequestParam(value = "result", required = false) String result,
+            @ApiParam(
+                    value = "The tag of the bovine fed",
+                    example = "1234")
+            @RequestParam(value = "tag", required = false) String tag) {
+        log.info("Request for search Ultrasound received.");
+
+        Ultrasound ultrasound = Ultrasound.builder()
+                .name(name)
+                .description(description)
+                .establishmentCuig(cuig)
+                .workerUserName(worker)
+                .type(HANDLER_TYPE)
+                .bovineTag(tag)
+                .serviceNumber(serviceNumber)
+                .result(result)
+                .build();
+
         SearchResponse<Ultrasound> searchResponse = activityHelper.search(ultrasound, page, size);
 
         List<Ultrasound> weightings = searchResponse.getActivities();
